@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block cambio %}
+  <div class="container mt-3">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Confirmar Eliminación</h5>
+        <p class="card-text">¿Está seguro de que desea eliminar el expediente?</p>
+
+        <form method="post" class="mb-3">
+          {% csrf_token %}
+          <div class="d-flex justify-content-start">
+            <button type="submit" class="btn btn-danger mr-2">Eliminar</button>
+            <a href="/Exp/prueba/" class="btn btn-secondary">Cancelar</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

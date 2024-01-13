@@ -1,9 +1,13 @@
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
+from django.views import View
 from django.views.generic import UpdateView, CreateView, DeleteView
-from .models import Expedientes, ExpedientesPrueba, Pases
+
+from .forms import PaseForm, AreaForm
+from .models import Expedientes, ExpedientesPrueba, Pases, Areas
 from django import forms
+
 
 def index(request):
     return render(request, 'index6.html')
@@ -90,6 +94,50 @@ class ExpEliminar(DeleteView):
 
 class Pase(CreateView):
     model = Pases
-    fields = ['fecha_pase', 'nro_exp', 'area']
+    form_class = PaseForm
     template_name = 'pases.html'
+    success_url = '/Exp/prueba/'
 
+    def form_invalid(self, form):  # Me sirve para mostrar por consola si el formulario en invalido
+        print(form.errors)
+        return super().form_invalid(form)
+
+    def get_initial(self):
+        initial = super().get_initial()
+        initial['nro_exp'] = self.kwargs['pk']
+        return initial
+
+
+class CrearArea(CreateView):
+    model = Areas
+    template_name = 'crear_area.html'
+    success_url = '/Exp/crear_area/'
+    fields = ['area']
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['areas'] = Areas.objects.all()
+        return context
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        # Ocultar la etiqueta del campo "area"
+        form.fields['area'].label = False
+        return form
+
+
+
+
+# class CrearArea(View):
+#     template_name = 'crear_area.html'
+#
+#     def get(self, request):
+#         form = AreaForm()
+#         return render(request, self.template_name, {'form': form})
+#
+#     def post(self, request):
+#         form = AreaForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('lista_areas')  # Reemplaza 'lista_areas' con el nombre de tu URL para listar áreas
+#         return render(request, self.template_name, {'form': form})

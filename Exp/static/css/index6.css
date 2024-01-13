@@ -35,3 +35,23 @@ div.dataTables_wrapper div.dataTables_length {
     color: #fff;
 }
 
+.custom-button {
+    background-color: #28a745; /* Fondo verde oscuro */
+    border: 1px solid #77d38d; /* Borde verde claro */
+}
+
+.custom-button:hover {
+    background-color: #77d38d; /* Cambio de color al pasar el ratón */
+    color: #28a745; /* Texto verde oscuro al pasar el ratón */
+}
+
+.custom-button2 {
+    background-color: #1a3961; /* Fondo azul oscuro */
+    border: 1px solid #1a3961; /* Borde azul oscuro */
+    color: #ffffff; /* Texto blanco */
+}
+
+.custom-button2:hover {
+    background-color: #2c5ca9; /* Cambio de color al pasar el ratón */
+    color: #ffffff; /* Texto blanco al pasar el ratón */
+}

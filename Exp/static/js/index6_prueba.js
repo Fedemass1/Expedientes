@@ -70,15 +70,20 @@ const listExpedientes = async () => {
                 expediente_prueba.nro_resol_CS,
                 expediente_prueba.observaciones,
                 `
-                <button class="btn btn-sm btn-primary" onclick="redirectToEditView(${expediente_prueba.id})">
+                <button class="btn btn-sm btn-primary" onclick="redirectToEditView(${expediente_prueba.id})" title="Editar Expediente">
                     <i class='fa-solid fa-pencil'></i>
                 </button>
                 
-                <button class="btn btn-sm btn-danger" onclick="redirectToDeleteView(${expediente_prueba.id})">
+                <button class="btn btn-sm btn-danger" onclick="redirectToDeleteView(${expediente_prueba.id})" title="Eliminar Expediente">
                     <i class='fa-solid fa-trash-can'></i>
                 </button>
                 
-                <button class="btn btn-sm btn-warning" onclick="redirectToPaseView(${expediente_prueba.id})">
+                <button class="btn btn-sm custom-button" onclick="redirectToPaseView(${expediente_prueba.id})" title="Pasar Expediente">
+                 <span style="color: #000000;"><i class="fa-solid fa-share"></i></span>
+                </button>
+
+                
+                <button class="btn btn-sm btn-warning" onclick="redirectToPaseView(${expediente_prueba.id})" title="Detalles Expediente">
                     <i class="fa-regular fa-eye"></i>
                 </button>
                 `

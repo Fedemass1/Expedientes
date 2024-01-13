@@ -1,19 +1,38 @@
 {% extends 'base.html' %}
 
 {% block cambio %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h1 class="text-center mb-4">Agrega un Pase</h1>
 
-    <!doctype html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport"
-              content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>Document</title>
-    </head>
-    <body>
-    <h1>ESTO ES UNA PRUEBA</h1>
-    </body>
-    </html>
-
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="{{ form.fecha_pase.id_for_label }}">Fecha de Pase</label>
+                                {{ form.fecha_pase }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.nro_exp.id_for_label }}">Número de Expediente</label>
+                                {{ form.nro_exp }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.area_origen.id_for_label }}">Área de Origen</label>
+                                {{ form.area_origen }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.area_receptora.id_for_label }}">Área Receptora</label>
+                                {{ form.area_receptora }}
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary">Guardar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

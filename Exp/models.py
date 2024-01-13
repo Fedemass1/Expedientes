@@ -29,11 +29,32 @@ class ExpedientesPrueba(models.Model):
     class Meta:
         db_table = 'expedientes_prueba'
 
+    def __str__(self):
+        return str(self.nro_exp)
 
-class Pases(models.Model):
-    nro_exp = models.ForeignKey(Expedientes, related_name='expedientes', on_delete=models.CASCADE, null=True)
-    fecha_pase = models.DateTimeField(default=datetime.now().date().strftime("%d"))
+
+class Areas(models.Model):
     area = models.CharField(max_length=100)
 
     class Meta:
+        db_table = 'Areas'
+
+    def __str__(self):
+        return self.area
+
+
+
+class Pases(models.Model):
+    nro_exp = models.ForeignKey(ExpedientesPrueba, related_name='expedientes', on_delete=models.CASCADE, null=True)
+    fecha_pase = models.DateTimeField(default=datetime.now().date().strftime("%d"))
+    area_origen = models.ForeignKey(Areas, related_name='area_origen', on_delete=models.CASCADE, null=True)
+    area_receptora = models.ForeignKey(Areas, related_name='area_receptora', on_delete=models.CASCADE, null=True)
+
+    class Meta:
         db_table = 'expedientes_pases'
+
+
+
+
+
+

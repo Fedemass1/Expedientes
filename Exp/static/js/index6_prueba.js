@@ -52,6 +52,9 @@ const redirectToDeleteView = (expediente_pruebaId) => {
 const redirectToPaseView = (expediente_pruebaId) => {
     window.location.href = `http://localhost:8000/Exp/pase/${expediente_pruebaId}/`;
 };
+const redirectToDetalleView = (expediente_pruebaId) => {
+    window.location.href = `http://localhost:8000/Exp/detalle_expediente/${expediente_pruebaId}/`;
+};
 
 
 const listExpedientes = async () => {
@@ -83,7 +86,7 @@ const listExpedientes = async () => {
                 </button>
 
                 
-                <button class="btn btn-sm btn-warning" onclick="redirectToPaseView(${expediente_prueba.id})" title="Detalles Expediente">
+                <button class="btn btn-sm btn-warning" onclick="redirectToDetalleView(${expediente_prueba.id})" title="Detalles Expediente">
                     <i class="fa-regular fa-eye"></i>
                 </button>
                 `

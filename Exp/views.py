@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import UpdateView, CreateView, DeleteView
+from django.views.generic import UpdateView, CreateView, DeleteView, DetailView
 
 from .forms import PaseForm, AreaForm
 from .models import Expedientes, ExpedientesPrueba, Pases, Areas
@@ -125,19 +125,28 @@ class CrearArea(CreateView):
         form.fields['area'].label = False
         return form
 
+class DetalleExpediente(DetailView):
+    model = ExpedientesPrueba
+    template_name = "lista_pases.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Obtén los pases ordenados por la fecha de pase de forma descendente (más nuevo primero)
+        context['pases'] = self.object.pases.all().order_by('-fecha_pase')
+        return context
+
+#Cuando uso clase basada en vista, debo llamar al objeto desde mi html usando object. Distinto
+#es si se utiliza la función de abajo
 
 
-
-# class CrearArea(View):
-#     template_name = 'crear_area.html'
+# def detalle_expediente(request, nro_exp_id):
+#     expediente = ExpedientesPrueba.objects.get(pk=nro_exp_id)
 #
-#     def get(self, request):
-#         form = AreaForm()
-#         return render(request, self.template_name, {'form': form})
+#     # Obtén los pases ordenados por la fecha de pase de forma descendente (más nuevo primero)
+#     pases_ordenados = expediente.pases.all().order_by('-fecha_pase')
 #
-#     def post(self, request):
-#         form = AreaForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('lista_areas')  # Reemplaza 'lista_areas' con el nombre de tu URL para listar áreas
-#         return render(request, self.template_name, {'form': form})
+#     # Agrega los pases ordenados al contexto
+#     context = {'expediente': expediente, 'pases': pases_ordenados}
+#
+#     return render(request, 'lista_pases.html', context)
+

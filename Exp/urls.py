@@ -1,6 +1,7 @@
 from django.urls import path
 from Exp import views
-from Exp.views import ExpActualizacion, ExpActualizacionPrueba, ExpAgregarPrueba, ExpEliminar, Pase, CrearArea
+from Exp.views import ExpActualizacion, ExpActualizacionPrueba, ExpAgregarPrueba, ExpEliminar, Pase, CrearArea, \
+     DetalleExpediente
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -11,9 +12,9 @@ urlpatterns = [
     path('edit_prueba/<int:pk>/', ExpActualizacionPrueba.as_view(), name='edit_expedientes_prueba'),
     path('agregar_prueba/', ExpAgregarPrueba.as_view(), name='edit_expedientes_prueba'),
     path('eliminar_prueba/<int:pk>/', ExpEliminar.as_view(), name='delete_expedientes_prueba'),
-    path('eliminar_prueba/<int:pk>/', ExpEliminar.as_view(), name='delete_expedientes_prueba'),
-    path('eliminar_prueba/<int:pk>/', ExpEliminar.as_view(), name='delete_expedientes_prueba'),
     path('pase/<int:pk>/', Pase.as_view(), name='pase'),
     path('crear_area/', CrearArea.as_view(), name='crear_area'),
+    path('detalle_expediente/<int:pk>/', DetalleExpediente.as_view(), name='detalle_expediente'),
+    # path('detalle_expediente/<int:nro_exp_id>/', detalle_expediente, name='detalle_expediente'),
 
 ]

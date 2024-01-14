@@ -45,7 +45,7 @@ class Areas(models.Model):
 
 
 class Pases(models.Model):
-    nro_exp = models.ForeignKey(ExpedientesPrueba, related_name='expedientes', on_delete=models.CASCADE, null=True)
+    nro_exp = models.ForeignKey(ExpedientesPrueba, related_name='pases', on_delete=models.CASCADE, null=True)
     fecha_pase = models.DateTimeField(default=datetime.now().date().strftime("%d"))
     area_origen = models.ForeignKey(Areas, related_name='area_origen', on_delete=models.CASCADE, null=True)
     area_receptora = models.ForeignKey(Areas, related_name='area_receptora', on_delete=models.CASCADE, null=True)

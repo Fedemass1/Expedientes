@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block cambio %}
+
+    <div class="col-md-6" style="margin-left: 50px;">
+        <h4 class="mb-4">Pases</h4>
+        {% if not pases %}
+            <p class="mb-4">No hay pases para este expediente</p>
+        {% else %}
+            {% for pase in pases %} {# pases es el related_name del modelo #}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h6 class="card-subtitle mb-2 text-muted">
+                            Área receptora: {{ pase.area_receptora}}
+                        </h6>
+                        <p class="card-text">
+                            Fecha del pase: {{ pase.fecha_pase|date:"d/m/Y" }}
+                        </p>
+                        <!-- Otros detalles del pase que quieras mostrar -->
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+{% endblock %}

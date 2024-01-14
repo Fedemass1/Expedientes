@@ -63,6 +63,8 @@ const listExpedientes = async () => {
         const data = await response.json();
 
         let expedientes = data.expedientes_prueba.map((expediente_prueba, index_prueba) => {
+            let ultimo_pase = expediente_prueba.ultimo_pase ? expediente_prueba.ultimo_pase.area_receptora : '';
+
             return [
                 index_prueba + 1,
                 expediente_prueba.fecha ? new Date(expediente_prueba.fecha).toLocaleDateString('es-AR') : '',
@@ -71,7 +73,7 @@ const listExpedientes = async () => {
                 expediente_prueba.objeto,
                 expediente_prueba.nro_resol_rectorado,
                 expediente_prueba.nro_resol_CS,
-                expediente_prueba.observaciones,
+                ultimo_pase, // Aquí se muestra el último pase en lugar de las observaciones
                 `
                 <button class="btn btn-sm btn-primary" onclick="redirectToEditView(${expediente_prueba.id})" title="Editar Expediente">
                     <i class='fa-solid fa-pencil'></i>

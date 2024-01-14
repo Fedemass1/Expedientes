@@ -23,10 +23,37 @@ def list_expedientes(request):
     return JsonResponse(data)
 
 
+
 def list_expedientes_prueba(request):
-    expedientes_prueba = list(ExpedientesPrueba.objects.values())
-    data = {'expedientes_prueba': expedientes_prueba}  # 'expedientes' (key) debe ser igual al nombre de mi tabla
-    return JsonResponse(data)
+    expedientes_prueba = ExpedientesPrueba.objects.all()
+    expedientes_data = []
+
+    for expediente_prueba in expedientes_prueba:
+        pases = expediente_prueba.pases.order_by('-fecha_pase')
+        ultimo_pase = pases.first() if pases else None
+
+        expediente_data = {
+            'id': expediente_prueba.id,
+            'fecha': expediente_prueba.fecha.strftime('%Y-%m-%d') if expediente_prueba.fecha else None,
+            'nro_exp': expediente_prueba.nro_exp,
+            'iniciador': expediente_prueba.iniciador,
+            'objeto': expediente_prueba.objeto,
+            'nro_resol_rectorado': expediente_prueba.nro_resol_rectorado,
+            'nro_resol_CS': expediente_prueba.nro_resol_CS,
+            'observaciones': expediente_prueba.observaciones,
+            'ultimo_pase': {'area_receptora': ultimo_pase.area_receptora.area, 'fecha_pase': ultimo_pase.fecha_pase} if ultimo_pase else None,
+        }
+
+        expedientes_data.append(expediente_data)
+
+    return JsonResponse({'expedientes_prueba': expedientes_data}, safe=False)
+
+
+#La deje de usar ya que tuve que complejizarla con la función de arriba para poder traer el area receptora desde otra tabla
+# def list_expedientes_prueba(request):
+#     expedientes_prueba = list(ExpedientesPrueba.objects.values())
+#     data = {'expedientes_prueba': expedientes_prueba}  # 'expedientes' (key) debe ser igual al nombre de mi tabla
+#     return JsonResponse(data)
 
 
 class ExpActualizacion(UpdateView):

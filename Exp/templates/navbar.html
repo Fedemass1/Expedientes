@@ -44,7 +44,19 @@
 
         <!--Agrego un botón de usuario a la derecha del navbar-->
         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <button class="btn btn-primary me-md-4 custom-btn" type="button">Usuario</button>
+       <div class="user-info m">
+    {% if user.is_authenticated %}
+        <h5>
+            <span class="badge badge-primary" style="margin-right: 65px;">
+                <i class="bi bi-person" ></i> {{ user.get_username }}&nbsp; | &nbsp;
+                <span style="color: #3498db;">{{ user.area.area }}</span>
+            </span>
+        </h5>
+    {% endif %}
+</div>
+
+
+
         </div>
         <!--Fin del botón-->
 

@@ -23,7 +23,7 @@ def list_expedientes(request):
     return JsonResponse(data)
 
 
-
+#Modifique mi función original de JsonResponse para que incluya el campo con el área en la que se encuentra el expediente
 def list_expedientes_prueba(request):
     expedientes_prueba = ExpedientesPrueba.objects.all()
     expedientes_data = []

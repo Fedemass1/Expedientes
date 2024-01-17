@@ -16,35 +16,45 @@
         }
     </style>
 
-    <div class="card border-custom-yellow shadow mb-4">
-        <div class="card-header" style="background-color: #3063a6; border-color: #3063a6; color: white;">
-            <h4 class="mb-0">Modificar Datos</h4>
-        </div>
-        <div class="card-body">
-            <form action="" method="POST" class="form">
-                {% csrf_token %}
-                {% for field in form %}
-                    <div class="form-group">
-                        <label class="form-label text-dark">{{ field.label }}</label>
-
-                        {% if field.name == 'fecha' %}
-                            <input type="date" name="{{ field.name }}" value="{{ field.value|date:'Y-m-d' }}" class="form-control">
-                        {% else %}
-                            {{ field|add_class:"form-control" }}
-                        {% endif %}
-
-                        {% if field.help_text %}
-                            <small class="form-text text-muted">{{ field.help_text }}</small>
-                        {% endif %}
-                        {% for error in field.errors %}
-                            <div class="alert alert-danger mt-2">{{ error }}</div>
-                        {% endfor %}
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card border-custom-yellow shadow mb-4">
+                    <div class="card-header" style="background-color: #3063a6; border-color: #3063a6; color: white;">
+                        <h4 class="mb-0">Modificar Datos</h4>
                     </div>
-                {% endfor %}
-                <div class="mt-4">
-                    <button type="submit" class="btn btn-custom-dark-blue btn-lg custom-dark-blue">Modificar</button>
+                    <div class="card-body">
+                        <form action="" method="POST" class="form">
+                            {% csrf_token %}
+                            {% for field in form %}
+                                <div class="form-group">
+                                    <label class="form-label text-dark">{{ field.label }}</label>
+
+                                    {% if field.name == 'fecha' %}
+                                        <input type="date" name="{{ field.name }}"
+                                               value="{{ field.value|date:'Y-m-d' }}" class="form-control">
+                                    {% else %}
+                                        {{ field|add_class:"form-control" }}
+                                    {% endif %}
+
+                                    {% if field.help_text %}
+                                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                                    {% endif %}
+                                    {% for error in field.errors %}
+                                        <div class="alert alert-danger mt-2">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            {% endfor %}
+                            <div class="mt-4">
+                                <button type="submit" class="btn btn-custom-dark-blue btn-lg custom-dark-blue">
+                                    Modificar
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
+
 {% endblock %}

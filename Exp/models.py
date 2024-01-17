@@ -15,6 +15,16 @@ class Expedientes(models.Model):
         db_table = 'expedientes'
 
 
+class Areas(models.Model):
+    area = models.CharField(max_length=100)
+
+    class Meta:
+        db_table = 'Areas'
+
+    def __str__(self):
+        return self.area
+
+
 # Uso este modelo para crear una BD de prueba y agregar nuevos expedientes.
 class ExpedientesPrueba(models.Model):
     fecha = models.DateTimeField(default=datetime.now().date().strftime(
@@ -25,22 +35,13 @@ class ExpedientesPrueba(models.Model):
     nro_resol_rectorado = models.CharField(max_length=100, null=True, blank=True)
     nro_resol_CS = models.CharField(max_length=100, null=True, blank=True)
     observaciones = models.TextField(max_length=500, null=True, blank=True)
+    area_creacion = models.ForeignKey(Areas,related_name='area_creacion', on_delete=models.CASCADE, null=True)
 
     class Meta:
         db_table = 'expedientes_prueba'
 
     def __str__(self):
         return str(self.nro_exp)
-
-
-class Areas(models.Model):
-    area = models.CharField(max_length=100)
-
-    class Meta:
-        db_table = 'Areas'
-
-    def __str__(self):
-        return self.area
 
 
 

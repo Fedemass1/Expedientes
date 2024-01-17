@@ -23,13 +23,13 @@ def list_expedientes(request):
     return JsonResponse(data)
 
 
-#Modifique mi función original de JsonResponse para que incluya el campo con el área en la que se encuentra el expediente
+# Modifique mi función original de JsonResponse para que incluya el campo con el área en la que se encuentra el expediente
 def list_expedientes_prueba(request):
     expedientes_prueba = ExpedientesPrueba.objects.all()
     expedientes_data = []
 
     for expediente_prueba in expedientes_prueba:
-        pases = expediente_prueba.pases.order_by('-fecha_pase')
+        pases = expediente_prueba.pases.order_by('-id')
         ultimo_pase = pases.first() if pases else None
 
         expediente_data = {
@@ -41,7 +41,9 @@ def list_expedientes_prueba(request):
             'nro_resol_rectorado': expediente_prueba.nro_resol_rectorado,
             'nro_resol_CS': expediente_prueba.nro_resol_CS,
             'observaciones': expediente_prueba.observaciones,
-            'ultimo_pase': {'area_receptora': ultimo_pase.area_receptora.area, 'fecha_pase': ultimo_pase.fecha_pase} if ultimo_pase else None,
+            'area_creacion': expediente_prueba.area_creacion.area if expediente_prueba.area_creacion else None,
+            'ultimo_pase': {'area_receptora': ultimo_pase.area_receptora.area,
+                            'fecha_pase': ultimo_pase.fecha_pase} if ultimo_pase else None,
         }
 
         expedientes_data.append(expediente_data)
@@ -49,7 +51,7 @@ def list_expedientes_prueba(request):
     return JsonResponse({'expedientes_prueba': expedientes_data}, safe=False)
 
 
-#La deje de usar ya que tuve que complejizarla con la función de arriba para poder traer el area receptora desde otra tabla
+# La deje de usar ya que tuve que complejizarla con la función de arriba para poder traer el area receptora desde otra tabla
 # def list_expedientes_prueba(request):
 #     expedientes_prueba = list(ExpedientesPrueba.objects.values())
 #     data = {'expedientes_prueba': expedientes_prueba}  # 'expedientes' (key) debe ser igual al nombre de mi tabla
@@ -108,6 +110,10 @@ class ExpAgregarPrueba(CreateView):
         return context
 
     def form_valid(self, form):
+        # Obtener el área correspondiente al usuario actual
+        area_usuario = self.request.user.area  # Ajusta esto según la relación entre Usuario y Área en tu modelo
+        # Asignar el área al formulario antes de guardarlo
+        form.instance.area_creacion = area_usuario
         # Asignar el siguiente número de expediente al formulario antes de guardarlo
         form.instance.nro_exp = self.get_context_data()['siguiente_nro_exp']
         return super().form_valid(form)
@@ -135,6 +141,7 @@ class Pase(CreateView):
         return initial
 
 
+
 class CrearArea(CreateView):
     model = Areas
     template_name = 'crear_area.html'
@@ -152,6 +159,7 @@ class CrearArea(CreateView):
         form.fields['area'].label = False
         return form
 
+
 class DetalleExpediente(DetailView):
     model = ExpedientesPrueba
     template_name = "lista_pases.html"
@@ -162,8 +170,8 @@ class DetalleExpediente(DetailView):
         context['pases'] = self.object.pases.all().order_by('-fecha_pase')
         return context
 
-#Cuando uso clase basada en vista, debo llamar al objeto desde mi html usando object. Distinto
-#es si se utiliza la función de abajo
+# Cuando uso clase basada en vista, debo llamar al objeto desde mi html usando object. Distinto
+# es si se utiliza la función de abajo
 
 
 # def detalle_expediente(request, nro_exp_id):
@@ -176,4 +184,3 @@ class DetalleExpediente(DetailView):
 #     context = {'expediente': expediente, 'pases': pases_ordenados}
 #
 #     return render(request, 'lista_pases.html', context)
-

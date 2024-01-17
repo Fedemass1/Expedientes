@@ -2,7 +2,7 @@ from datetime import datetime
 
 from django import forms
 from django.utils import timezone
-from Exp.models import Pases, Areas
+from Exp.models import Pases, Areas, ExpedientesPrueba
 
 
 class PaseForm(forms.ModelForm):

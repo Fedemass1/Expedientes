@@ -135,10 +135,19 @@ class Pase(CreateView):
         print(form.errors)
         return super().form_invalid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['nro_exp'] = self.kwargs['pk']
+        return context
+
     def get_initial(self):
         initial = super().get_initial()
         initial['nro_exp'] = self.kwargs['pk']
         return initial
+
+
+
+
 
 
 

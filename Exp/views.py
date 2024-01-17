@@ -138,11 +138,30 @@ class Pase(CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['nro_exp'] = self.kwargs['pk']
+        print("Contexto", context['nro_exp'])
         return context
 
     def get_initial(self):
         initial = super().get_initial()
-        initial['nro_exp'] = self.kwargs['pk']
+        # Obtener datos del expediente relacionado
+        expediente_prueba = ExpedientesPrueba.objects.get(pk=self.kwargs['pk'])
+        # initial['nro_exp'] = expediente_prueba.nro_exp
+        # print("Exp:", initial)
+
+
+        # #Obtengo el pk
+        # initial['nro_exp'] = self.kwargs['pk']
+        # print("pk:", initial['nro_exp'])
+
+        initial = {
+            'nro_exp_': expediente_prueba.nro_exp,
+            'nro_exp': self.kwargs['pk'],
+
+        }
+
+
+
+
         return initial
 
 

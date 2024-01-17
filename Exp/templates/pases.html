@@ -8,6 +8,7 @@
                     <div class="card-body">
                         <h1 class="text-center mb-4">Agrega un Pase</h1>
 
+
                         <form method="post">
                             {% csrf_token %}
                             <div class="form-group">
@@ -15,8 +16,9 @@
                                 {{ form.fecha_pase }}
                             </div>
                             <div class="form-group">
-                                <label for="{{ form.nro_exp_for_label }}">Número de Expediente</label>
-                                {{ form.nro_exp }}
+                                <label for="{{ form.nro_exp.id_for_label }}">Número de Expediente</label>
+
+                                {{ form.nro_exp}}
                             </div>
                             <div class="form-group">
                                 <label for="{{ form.area_origen.id_for_label }}">Área de Origen</label>
@@ -35,4 +37,36 @@
             </div>
         </div>
     </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Deshabilitar el campo número de expediente
+        var nroExpField = document.getElementById("id_nro_exp");  // Ajusta el selector según la estructura real de tu formulario
+        console.log("Campo exp", nroExpField)
+        // Verificar si el campo número de expediente existe antes de intentar modificarlo
+        if (nroExpField) {
+            nroExpField.disabled = true;
+
+        }
+
+        // Deshabilitar el campo de área de origen
+        var areaOrigenField = document.getElementById("id_area_origen");  // Cambia "id_area_origen" al ID real del campo
+        console.log(areaOrigenField)
+        // Verificar si el campo de área de origen existe antes de intentar modificarlo
+        if (areaOrigenField) {
+            areaOrigenField.disabled = true;
+        }
+
+        // Al enviar el formulario, habilitar el campo de área de origen
+        var formulario = document.querySelector("form");  // Ajusta el selector según la estructura real de tu formulario
+
+        if (formulario) {
+            formulario.addEventListener("submit", function() {
+                areaOrigenField.disabled = false;
+                nroExpField.disabled = false;
+            });
+        }
+    });
+</script>
+
 {% endblock %}
+

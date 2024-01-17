@@ -39,7 +39,10 @@ from Exp.models import Pases, Areas, ExpedientesPrueba
 
 class PaseForm(forms.ModelForm):
     area_origen = forms.ModelChoiceField(queryset=Areas.objects.all(), required=False,
-                                         widget=forms.Select(attrs={'class': 'form-select', 'readonly': True, 'style': 'background-color: #e9ecef;'}))
+                                         widget=forms.Select(attrs={'class': 'form-control', 'readonly': True, 'style': 'background-color: #e9ecef;'}),
+
+    )
+
     area_receptora = forms.ModelChoiceField(queryset=Areas.objects.all(), required=False,
                                             widget=forms.Select(attrs={'class': 'form-select'}))
     fecha_pase = forms.DateTimeField(
@@ -58,33 +61,20 @@ class PaseForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(PaseForm, self).__init__(*args, **kwargs)
         nro_exp = self.initial.get('nro_exp')
-        print(f"Valor de nro_exp en __init__: {nro_exp}")
+        nro_exp_ = self.initial.get('nro_exp_')
+        print("nro_exp_", nro_exp_)
 
-        try:
-            # Intenta obtener el último pase
-            ultimo_pase = Pases.objects.filter(nro_exp=nro_exp).order_by('-fecha_pase').first()
-            print(ultimo_pase)
+        ultimo_pase = Pases.objects.filter(nro_exp=nro_exp).order_by('-fecha_pase').first()
 
-            if ultimo_pase is not None:
-                self.fields['area_origen'].initial = ultimo_pase.area_receptora
-            else:
-                # Manejar el caso en que no existen pases para el expediente
-                expediente_prueba = ExpedientesPrueba.objects.get(nro_exp=nro_exp)
-                self.fields['area_origen'].initial = expediente_prueba.area_creacion
-                print(f"Área de origen establecida como área de creación: {self.fields['area_origen'].initial}")
 
-        except Pases.DoesNotExist:
-            # Manejar el caso en que no hay pases asociados al expediente
-            expediente_prueba = ExpedientesPrueba.objects.get(nro_exp=nro_exp)
+        if ultimo_pase is not None:
+            self.fields['area_origen'].initial = ultimo_pase.area_receptora
+
+        else:
+            # Manejar el caso en que no existen pases para el expediente
+            expediente_prueba = ExpedientesPrueba.objects.get(nro_exp=nro_exp_)
             self.fields['area_origen'].initial = expediente_prueba.area_creacion
-            print(
-                f"No hay pases asociados al expediente. Área de origen establecida como área de creación: {self.fields['area_origen'].initial}")
-
-        except ExpedientesPrueba.DoesNotExist:
-            # Manejar el caso en que el expediente_prueba no exista
-            self.fields['area_origen'].initial = None
-            print("Estoy aca")
-
+            print(f"Área de origen establecida como área de creación: {self.fields['area_origen'].initial}")
 
     class Meta:
         model = Pases

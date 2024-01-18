@@ -32,7 +32,7 @@
 
                                     {% if field.name == 'fecha' %}
                                         <input type="date" name="{{ field.name }}" value="{% now 'Y-m-d' %}"
-                                               class="form-control">
+                                               class="form-control" readonly>
                                     {% elif field.name == 'nro_exp' %}
                                         <input type="text" name="{{ field.name }}" value="{{ siguiente_nro_exp }}"
                                                class="form-control" readonly>

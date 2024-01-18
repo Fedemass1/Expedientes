@@ -1,3 +1,5 @@
+from django.contrib import messages
+from django.core.exceptions import ValidationError
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
@@ -29,12 +31,13 @@ def list_expedientes_prueba(request):
     expedientes_data = []
 
     for expediente_prueba in expedientes_prueba:
+
         pases = expediente_prueba.pases.order_by('-id')
         ultimo_pase = pases.first() if pases else None
 
         expediente_data = {
             'id': expediente_prueba.id,
-            'fecha': expediente_prueba.fecha.strftime('%Y-%m-%d') if expediente_prueba.fecha else None,
+            'fecha': expediente_prueba.fecha.strftime('%d/%m/%Y') if expediente_prueba.fecha else None,
             'nro_exp': expediente_prueba.nro_exp,
             'iniciador': expediente_prueba.iniciador,
             'objeto': expediente_prueba.objeto,
@@ -131,9 +134,10 @@ class Pase(CreateView):
     template_name = 'pases.html'
     success_url = '/Exp/prueba/'
 
-    def form_invalid(self, form):  # Me sirve para mostrar por consola si el formulario en invalido
-        print(form.errors)
+    def form_invalid(self, form):
+        messages.error(self.request, "Hubo un error en el formulario. Revise los campos marcados.")
         return super().form_invalid(form)
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -158,9 +162,6 @@ class Pase(CreateView):
             'nro_exp': self.kwargs['pk'],
 
         }
-
-
-
 
         return initial
 

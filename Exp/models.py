@@ -1,6 +1,8 @@
 from django.db import models
 from datetime import datetime
 
+from django.utils import timezone
+
 
 class Expedientes(models.Model):
     fecha = models.DateField()
@@ -27,8 +29,7 @@ class Areas(models.Model):
 
 # Uso este modelo para crear una BD de prueba y agregar nuevos expedientes.
 class ExpedientesPrueba(models.Model):
-    fecha = models.DateTimeField(default=datetime.now().date().strftime(
-        "%d/%m/%Y"))  # Me muestra la fecha en el formato dd/mm/aaaa en la datatable. Esto se debe complementar con el JS
+    fecha = models.DateTimeField(default=timezone.now)  # Me muestra la fecha en el formato dd/mm/aaaa en la datatable. Esto se debe complementar con el JS
     nro_exp = models.IntegerField()
     iniciador = models.CharField(max_length=100)
     objeto = models.TextField(max_length=200)

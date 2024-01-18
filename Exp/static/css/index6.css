@@ -1,5 +1,10 @@
 /* styles.css */
 
+.custom-thead th {
+        background-color: #1a3961 !important; /* Puedes ajustar el color según tus preferencias */
+        color: white !important; /* Puedes ajustar el color del texto según tus preferencias */
+    }
+
 .custom-btn {
     background-color: #007BFF;
     color: #fff;
@@ -55,3 +60,4 @@ div.dataTables_wrapper div.dataTables_length {
     background-color: #2c5ca9; /* Cambio de color al pasar el ratón */
     color: #ffffff; /* Texto blanco al pasar el ratón */
 }
+

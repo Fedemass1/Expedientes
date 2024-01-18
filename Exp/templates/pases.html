@@ -28,8 +28,18 @@
                                 <label for="{{ form.area_receptora.id_for_label }}">Área Receptora</label>
                                 {{ form.area_receptora }}
                             </div>
+
+                            {% if form.non_field_errors %}
+                                    {% for error in form.non_field_errors %}
+                                        {% if "El área de origen y la receptora no pueden ser iguales." in error %}
+                                            <small class="text-danger">{{ error }}</small>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+
+
                             <div class="text-center">
-                                <button type="submit" class="btn btn-primary">Guardar</button>
+                                <button type="submit" class="btn btn-primary" style="margin-top: 20px;">Realizar pase</button>
                             </div>
                         </form>
                     </div>

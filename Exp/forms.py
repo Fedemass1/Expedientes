@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from django import forms
+from django.core.exceptions import ValidationError
 from django.utils import timezone
 from Exp.models import Pases, Areas, ExpedientesPrueba
 
@@ -46,10 +47,10 @@ class PaseForm(forms.ModelForm):
     area_receptora = forms.ModelChoiceField(queryset=Areas.objects.all(), required=False,
                                             widget=forms.Select(attrs={'class': 'form-select'}))
     fecha_pase = forms.DateTimeField(
-        initial=timezone.localtime(timezone.now()).strftime('%d/%m/%Y %H:%M:%S'),
         input_formats=['%d/%m/%Y %H:%M:%S'],
         widget=forms.DateTimeInput(
             attrs={'class': 'form-control', 'readonly': True, 'style': 'background-color: #e9ecef;'})
+
     )
 
     nro_exp = forms.ModelChoiceField(
@@ -65,7 +66,8 @@ class PaseForm(forms.ModelForm):
         print("nro_exp_", nro_exp_)
 
         ultimo_pase = Pases.objects.filter(nro_exp=nro_exp).order_by('-fecha_pase').first()
-
+        # Set the current date and time for 'fecha_pase'
+        self.initial['fecha_pase'] = timezone.localtime(timezone.now()).strftime('%d/%m/%Y %H:%M:%S')
 
         if ultimo_pase is not None:
             self.fields['area_origen'].initial = ultimo_pase.area_receptora
@@ -75,6 +77,17 @@ class PaseForm(forms.ModelForm):
             expediente_prueba = ExpedientesPrueba.objects.get(nro_exp=nro_exp_)
             self.fields['area_origen'].initial = expediente_prueba.area_creacion
             print(f"Área de origen establecida como área de creación: {self.fields['area_origen'].initial}")
+
+
+    def clean(self):
+        cleaned_data = super().clean()
+        area_origen = cleaned_data.get('area_origen')
+        area_receptora = cleaned_data.get('area_receptora')
+
+        if area_origen == area_receptora:
+            raise ValidationError("El área de origen y la receptora no pueden ser iguales.")
+
+        return cleaned_data
 
     class Meta:
         model = Pases

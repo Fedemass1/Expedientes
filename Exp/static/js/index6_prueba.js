@@ -72,7 +72,7 @@ const listExpedientes = async () => {
 
             return [
                 index_prueba + 1,
-                expediente_prueba.fecha ? new Date(expediente_prueba.fecha).toLocaleDateString('es-AR') : '',
+                expediente_prueba.fecha,
                 expediente_prueba.nro_exp,
                 expediente_prueba.iniciador,
                 expediente_prueba.objeto,

@@ -27,6 +27,22 @@ class Areas(models.Model):
         return self.area
 
 
+class Iniciadores(models.Model):
+    iniciador = models.CharField(max_length=100)
+    sigla = models.CharField(max_length=2)
+
+    class Meta:
+        db_table = 'Iniciadores'
+
+    def __str__(self):
+        return self.iniciador
+
+    def save(self, *args, **kwargs):
+        # Convierte la sigla a mayúsculas antes de guardarla
+        self.sigla = self.sigla.upper()
+        super(Iniciadores, self).save(*args, **kwargs)
+
+
 # Uso este modelo para crear una BD de prueba y agregar nuevos expedientes.
 class ExpedientesPrueba(models.Model):
     fecha = models.DateTimeField(default=timezone.now)  # Me muestra la fecha en el formato dd/mm/aaaa en la datatable. Esto se debe complementar con el JS

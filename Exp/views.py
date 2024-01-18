@@ -6,7 +6,7 @@ from django.views import View
 from django.views.generic import UpdateView, CreateView, DeleteView, DetailView
 
 from .forms import PaseForm, AreaForm
-from .models import Expedientes, ExpedientesPrueba, Pases, Areas
+from .models import Expedientes, ExpedientesPrueba, Pases, Areas, Iniciadores
 from django import forms
 
 
@@ -170,6 +170,18 @@ class CrearArea(CreateView):
         # Ocultar la etiqueta del campo "area"
         form.fields['area'].label = False
         return form
+
+class CrearIniciador(CreateView):
+    model = Iniciadores
+    template_name = 'crear_iniciador.html'
+    success_url = '/Exp/crear_iniciador/'
+    fields = ['iniciador', 'sigla']
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['iniciadores'] = Iniciadores.objects.all()
+        return context
+
 
 
 class DetalleExpediente(DetailView):

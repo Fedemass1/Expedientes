@@ -25,9 +25,15 @@
                                 {{ form.area_origen }}
                             </div>
                             <div class="form-group">
-                                <label for="{{ form.area_receptora.id_for_label }}">Área Receptora</label>
-                                {{ form.area_receptora }}
-                            </div>
+
+    <label for="{{ form.area_receptora.id_for_label }}">Área Receptora</label>
+    {{ form.area_receptora }}
+    {% if form.area_receptora.errors %}
+        {% for error in form.area_receptora.errors %}
+            <small class="text-danger">{{ error }}</small>
+        {% endfor %}
+    {% endif %}
+</div>
 
                             {% if form.non_field_errors %}
                                     {% for error in form.non_field_errors %}

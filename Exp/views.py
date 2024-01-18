@@ -1,4 +1,3 @@
-from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
@@ -31,7 +30,6 @@ def list_expedientes_prueba(request):
     expedientes_data = []
 
     for expediente_prueba in expedientes_prueba:
-
         pases = expediente_prueba.pases.order_by('-id')
         ultimo_pase = pases.first() if pases else None
 
@@ -134,41 +132,26 @@ class Pase(CreateView):
     template_name = 'pases.html'
     success_url = '/Exp/prueba/'
 
-    def form_invalid(self, form):
-        messages.error(self.request, "Hubo un error en el formulario. Revise los campos marcados.")
+    def form_invalid(self, form):  # Me sirve para mostrar por consola si el formulario en invalido
+        print(form.errors)
         return super().form_invalid(form)
 
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['nro_exp'] = self.kwargs['pk']
-        print("Contexto", context['nro_exp'])
-        return context
+    #Este código no es necesario
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context['nro_exp'] = self.kwargs['pk']
+    #     print("Contexto", context['nro_exp'])
+    #     return context
 
     def get_initial(self):
-        initial = super().get_initial()
-        # Obtener datos del expediente relacionado
         expediente_prueba = ExpedientesPrueba.objects.get(pk=self.kwargs['pk'])
-        # initial['nro_exp'] = expediente_prueba.nro_exp
-        # print("Exp:", initial)
-
-
-        # #Obtengo el pk
-        # initial['nro_exp'] = self.kwargs['pk']
-        # print("pk:", initial['nro_exp'])
 
         initial = {
             'nro_exp_': expediente_prueba.nro_exp,
             'nro_exp': self.kwargs['pk'],
-
         }
 
         return initial
-
-
-
-
-
 
 
 class CrearArea(CreateView):

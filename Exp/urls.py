@@ -3,6 +3,7 @@ from Exp import views
 from Exp.views import ExpActualizacion, ExpActualizacionPrueba, ExpAgregarPrueba, ExpEliminar, Pase, CrearArea, \
     DetalleExpediente, CrearIniciador
 
+
 urlpatterns = [
     path('', views.index, name='index'),
     path('prueba/', views.index_prueba, name='index_prueba'),
@@ -16,6 +17,4 @@ urlpatterns = [
     path('crear_area/', CrearArea.as_view(), name='crear_area'),
     path('crear_iniciador/', CrearIniciador.as_view(), name='crear_iniciador'),
     path('detalle_expediente/<int:pk>/', DetalleExpediente.as_view(), name='detalle_expediente'),
-
-
 ]

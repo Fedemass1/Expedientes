@@ -14,6 +14,13 @@
             border-color: #3063a6;
             color: white;
         }
+
+        /* Agregamos un margen inferior a .form-group */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+
     </style>
 
     <div class="container mt-4">
@@ -26,15 +33,26 @@
                     <div class="card-body">
                         <form action="" method="POST" class="form">
                             {% csrf_token %}
+                        {% if form.non_field_errors %}
+    {% for error in form.non_field_errors %}
+        <div class="alert alert-danger mt-2">{{ error }}</div>
+    {% endfor %}
+{% endif %}
                             {% for field in form %}
-                                <div class="form-group">
+                                <div class="form-group mb-3"> <!-- Agregamos la clase mb-4 para el margen inferior -->
                                     <label class="form-label text-dark">{{ field.label }}</label>
 
                                     {% if field.name == 'fecha' %}
-                                        <input type="date" name="{{ field.name }}"
-                                               value="{{ field.value|date:'Y-m-d' }}" class="form-control">
-                                    {% else %}
                                         {{ field|add_class:"form-control" }}
+
+                                     {% else %}
+                                        {% if field.name == 'objeto' %}
+                                            <div class="input-wrapper">
+                                                <textarea name="{{ field.name }}" class="form-control custom-size" maxlength="{{ field.field.max_length }}">{{ field.value }}</textarea>
+                                            </div>
+                                        {% else %}
+                                            {{ field|add_class:"form-control" }}
+                                        {% endif %}
                                     {% endif %}
 
                                     {% if field.help_text %}
@@ -45,6 +63,7 @@
                                     {% endfor %}
                                 </div>
                             {% endfor %}
+
                             <div class="mt-4">
                                 <button type="submit" class="btn btn-custom-dark-blue btn-lg custom-dark-blue">
                                     Modificar
@@ -56,5 +75,4 @@
             </div>
         </div>
     </div>
-
 {% endblock %}

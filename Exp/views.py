@@ -1,13 +1,12 @@
-from django.core.exceptions import ValidationError
-from django.http import JsonResponse
-from django.shortcuts import render, redirect
-from django.urls import reverse_lazy
-from django.views import View
-from django.views.generic import UpdateView, CreateView, DeleteView, DetailView
-
-from .forms import PaseForm, AreaForm
-from .models import Expedientes, ExpedientesPrueba, Pases, Areas, Iniciadores
 from django import forms
+from django.db import IntegrityError
+from django.http import JsonResponse
+from django.shortcuts import render
+from django.urls import reverse_lazy
+from django.views.generic import UpdateView, CreateView, DeleteView, DetailView
+from .forms import PaseForm, AreaForm, ExpedientesPruebaForm
+from .models import Expedientes, ExpedientesPrueba, Pases, Areas, Iniciadores
+
 
 
 def index(request):
@@ -37,7 +36,8 @@ def list_expedientes_prueba(request):
             'id': expediente_prueba.id,
             'fecha': expediente_prueba.fecha.strftime('%d/%m/%Y') if expediente_prueba.fecha else None,
             'nro_exp': expediente_prueba.nro_exp,
-            'iniciador': expediente_prueba.iniciador,
+            'iniciador': expediente_prueba.iniciador.iniciador if expediente_prueba.iniciador else None,
+            'sigla': expediente_prueba.iniciador.sigla if expediente_prueba.iniciador else None,
             'objeto': expediente_prueba.objeto,
             'nro_resol_rectorado': expediente_prueba.nro_resol_rectorado,
             'nro_resol_CS': expediente_prueba.nro_resol_CS,
@@ -75,6 +75,20 @@ class ExpActualizacionPrueba(UpdateView):
     template_name = "editar_exp.html"
     fields = ['fecha', 'nro_exp', 'iniciador', 'objeto', 'nro_resol_rectorado', 'nro_resol_CS', 'observaciones']
 
+    def form_valid(self, form):
+        try:
+            response = super().form_valid(form)
+            return response
+        except IntegrityError:
+            form.add_error(None, 'La combinación de número de expediente y año ya existe.')
+            return self.form_invalid(form)
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields['fecha'].widget = forms.DateInput(attrs={'type': 'date', 'class': 'form-control'},
+                                                      format='%Y-%m-%d')
+        return form
+
     def get_success_url(self):
         print(f"get_success_url called. PK: {self.object.pk}")
         # Utiliza reverse_lazy para construir la URL en base de la función index. La función index dirige a '/Exp'
@@ -87,9 +101,8 @@ class ExpActualizacionPrueba(UpdateView):
 
 
 class ExpAgregarPrueba(CreateView):
-    model = ExpedientesPrueba
     template_name = "agregar_exp.html"
-    fields = ['fecha', 'nro_exp', 'iniciador', 'objeto', 'nro_resol_rectorado', 'nro_resol_CS', 'observaciones']
+    form_class = ExpedientesPruebaForm
     success_url = '/Exp/prueba'
 
     def get_context_data(self, **kwargs):
@@ -194,17 +207,4 @@ class DetalleExpediente(DetailView):
         context['pases'] = self.object.pases.all().order_by('-fecha_pase')
         return context
 
-# Cuando uso clase basada en vista, debo llamar al objeto desde mi html usando object. Distinto
-# es si se utiliza la función de abajo
 
-
-# def detalle_expediente(request, nro_exp_id):
-#     expediente = ExpedientesPrueba.objects.get(pk=nro_exp_id)
-#
-#     # Obtén los pases ordenados por la fecha de pase de forma descendente (más nuevo primero)
-#     pases_ordenados = expediente.pases.all().order_by('-fecha_pase')
-#
-#     # Agrega los pases ordenados al contexto
-#     context = {'expediente': expediente, 'pases': pases_ordenados}
-#
-#     return render(request, 'lista_pases.html', context)

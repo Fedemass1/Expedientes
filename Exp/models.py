@@ -47,18 +47,22 @@ class Iniciadores(models.Model):
 class ExpedientesPrueba(models.Model):
     fecha = models.DateTimeField(default=timezone.now)  # Me muestra la fecha en el formato dd/mm/aaaa en la datatable. Esto se debe complementar con el JS
     nro_exp = models.IntegerField()
-    iniciador = models.CharField(max_length=100)
-    objeto = models.TextField(max_length=200)
+    iniciador = models.ForeignKey(Iniciadores, on_delete=models.CASCADE)
+    objeto = models.TextField(max_length=500)
     nro_resol_rectorado = models.CharField(max_length=100, null=True, blank=True)
     nro_resol_CS = models.CharField(max_length=100, null=True, blank=True)
     observaciones = models.TextField(max_length=500, null=True, blank=True)
     area_creacion = models.ForeignKey(Areas,related_name='area_creacion', on_delete=models.CASCADE, null=True)
-
+    exp_year = models.CharField(max_length=100, null=True, blank=True, unique=True)
     class Meta:
         db_table = 'expedientes_prueba'
 
     def __str__(self):
         return str(self.nro_exp)
+
+    def save(self, *args, **kwargs):
+        self.exp_year = f"{self.nro_exp}/{self.fecha.year}"
+        super().save(*args, **kwargs)
 
 
 

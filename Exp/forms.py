@@ -3,14 +3,15 @@ from datetime import datetime
 from django import forms
 from django.core.exceptions import ValidationError
 from django.utils import timezone
-from Exp.models import Pases, Areas, ExpedientesPrueba
+from Exp.models import Pases, Areas, ExpedientesPrueba, Iniciadores
 
 
 class PaseForm(forms.ModelForm):
     area_origen = forms.ModelChoiceField(queryset=Areas.objects.all(), required=False,
-                                         widget=forms.Select(attrs={'class': 'form-control', 'readonly': True, 'style': 'background-color: #e9ecef;'}),
+                                         widget=forms.Select(attrs={'class': 'form-control', 'readonly': True,
+                                                                    'style': 'background-color: #e9ecef;'}),
 
-    )
+                                         )
 
     area_receptora = forms.ModelChoiceField(queryset=Areas.objects.all(), required=False,
                                             widget=forms.Select(attrs={'class': 'form-select'}))
@@ -63,10 +64,19 @@ class PaseForm(forms.ModelForm):
         fields = ['fecha_pase', 'nro_exp', 'area_origen', 'area_receptora']
 
 
-
-
-
 class AreaForm(forms.ModelForm):
     class Meta:
         model = Areas
         fields = ['area']
+
+
+class ExpedientesPruebaForm(forms.ModelForm):
+    iniciador = forms.ModelChoiceField(queryset=Iniciadores.objects.all(),
+                                       widget=forms.Select(attrs={'class': 'form-control'}))
+
+    class Meta:
+        model = ExpedientesPrueba
+        fields = ['fecha', 'nro_exp', 'iniciador', 'objeto', 'nro_resol_rectorado', 'nro_resol_CS', 'observaciones']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)

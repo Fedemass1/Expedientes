@@ -181,6 +181,14 @@ window.addEventListener('load', async () => {
         $('.btn-columnas-dt').html('Columnas');
     });
 
+// Mover los botones de Excel y PDF a la izquierda de la barra de búsqueda
+$('.dataTables_filter label').before($('.btn-excel'));
+$('.dataTables_filter label').before($('.btn-pdf'));
+
+// Agregar un margen a la derecha de los botones
+$('.btn-excel').css('margin-right', '5px');
+$('.btn-pdf').css('margin-left', '10px');
+
 
     // Agregar el botón después de inicializar el DataTable
     $('.add-button-container').html(`

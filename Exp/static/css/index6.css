@@ -86,11 +86,10 @@ button.custom-button-size i {
 
 }
 
-
 .button-container {
     gap: 4px;
     display: flex;
-    flex-wrap: wrap; /* Permite que los botones se envuelvan en líneas múltiples */
+    /*flex-wrap: wrap; !* Permite que los botones se envuelvan en líneas múltiples. Descomentar para que se muestre en cuadrado *!*/
     align-items: center; /* Alineación vertical en el centro */
 }
 
@@ -155,7 +154,7 @@ button.custom-button-size i {
 
 
 .btn-excel {
-    margin-top: 8px;
+    margin-top: -5px;
     display: inline-block !important;
     padding: .375rem .65rem !important;
     font-size: 1rem !important;
@@ -187,7 +186,7 @@ button.custom-button-size i {
 
 
 .btn-pdf {
-    margin-top: 8px;
+    margin-top: -5px;
     display: inline-block !important;
     padding: .375rem .55rem !important;
     font-size: 1rem !important;
@@ -201,7 +200,7 @@ button.custom-button-size i {
     border-radius: .5rem !important;
     transition: all .2s ease-in-out !important;
     box-shadow: 0 1px 3px rgba(0, 0, 0, .1), 0 1px 2px rgba(0, 0, 0, .2) !important;
-    margin-right: 25px !important;
+    margin-right: 1000px !important;
 }
 
 .btn-pdf:hover {

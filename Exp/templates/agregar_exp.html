@@ -46,7 +46,7 @@
                                     {% else %}
                                         {% if field.name == 'objeto' %}
                                             <div class="input-wrapper">
-                                                <textarea name="{{ field.name }}" class="form-control custom-size" maxlength="{{ field.field.max_length }}"> </textarea>
+                                                <textarea name="{{ field.name }}" class="form-control custom-size" maxlength="{{ field.field.max_length }}"></textarea>
                                             </div>
                                         {% else %}
                                             {{ field|add_class:"form-control" }}

@@ -31,8 +31,8 @@ class PaseForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(PaseForm, self).__init__(*args, **kwargs)
         nro_exp = self.initial.get('nro_exp')
-        nro_exp_ = self.initial.get('nro_exp_')
-        print("nro_exp_", nro_exp_)
+        exp_year = self.initial.get('exp_year')
+        print("nro_exp_", exp_year)
 
         ultimo_pase = Pases.objects.filter(nro_exp=nro_exp).order_by('-fecha_pase').first()
         # Set the current date and time for 'fecha_pase'
@@ -43,7 +43,7 @@ class PaseForm(forms.ModelForm):
 
         else:
             # Manejar el caso en que no existen pases para el expediente
-            expediente_prueba = ExpedientesPrueba.objects.get(nro_exp=nro_exp_)
+            expediente_prueba = ExpedientesPrueba.objects.get(exp_year=exp_year)
             self.fields['area_origen'].initial = expediente_prueba.area_creacion
             print(f"Área de origen establecida como área de creación: {self.fields['area_origen'].initial}")
 

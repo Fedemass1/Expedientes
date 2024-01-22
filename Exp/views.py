@@ -1,8 +1,11 @@
+from datetime import timedelta
+
 from django import forms
 from django.db import IntegrityError
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
+from django.utils import timezone
 from django.views.generic import UpdateView, CreateView, DeleteView, DetailView
 from .forms import PaseForm, AreaForm, ExpedientesPruebaForm
 from .models import Expedientes, ExpedientesPrueba, Pases, Areas, Iniciadores
@@ -130,6 +133,7 @@ class ExpAgregarPrueba(CreateView):
         form.instance.area_creacion = area_usuario
         # Asignar el siguiente número de expediente al formulario antes de guardarlo
         form.instance.nro_exp = self.get_context_data()['siguiente_nro_exp']
+        # Asignar la fecha y hora actuales al formulario antes de guardarlo
         return super().form_valid(form)
 
 
@@ -149,18 +153,17 @@ class Pase(CreateView):
         print(form.errors)
         return super().form_invalid(form)
 
-    #Este código no es necesario
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context['nro_exp'] = self.kwargs['pk']
-    #     print("Contexto", context['nro_exp'])
-    #     return context
+    # def form_valid(self, form):
+    #     response = super().form_valid(form)
+    #     pase = get_object_or_404(Pases, pk=self.object.pk)
+    #     print(pase.fecha_pase)
+    #     return response
 
     def get_initial(self):
         expediente_prueba = ExpedientesPrueba.objects.get(pk=self.kwargs['pk'])
 
         initial = {
-            'nro_exp_': expediente_prueba.nro_exp,
+            'exp_year': expediente_prueba.exp_year,
             'nro_exp': self.kwargs['pk'],
         }
 

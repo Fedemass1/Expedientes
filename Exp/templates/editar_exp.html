@@ -14,37 +14,65 @@
             border-color: #3063a6;
             color: white;
         }
+
+        /* Agregamos un margen inferior a .form-group */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+
     </style>
 
-    <div class="card border-custom-yellow shadow mb-4">
-        <div class="card-header" style="background-color: #3063a6; border-color: #3063a6; color: white;">
-            <h4 class="mb-0">Modificar Datos</h4>
-        </div>
-        <div class="card-body">
-            <form action="" method="POST" class="form">
-                {% csrf_token %}
-                {% for field in form %}
-                    <div class="form-group">
-                        <label class="form-label text-dark">{{ field.label }}</label>
-
-                        {% if field.name == 'fecha' %}
-                            <input type="date" name="{{ field.name }}" value="{{ field.value|date:'Y-m-d' }}" class="form-control">
-                        {% else %}
-                            {{ field|add_class:"form-control" }}
-                        {% endif %}
-
-                        {% if field.help_text %}
-                            <small class="form-text text-muted">{{ field.help_text }}</small>
-                        {% endif %}
-                        {% for error in field.errors %}
-                            <div class="alert alert-danger mt-2">{{ error }}</div>
-                        {% endfor %}
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card border-custom-yellow shadow mb-4">
+                    <div class="card-header" style="background-color: #3063a6; border-color: #3063a6; color: white;">
+                        <h4 class="mb-0">Modificar Datos</h4>
                     </div>
-                {% endfor %}
-                <div class="mt-4">
-                    <button type="submit" class="btn btn-custom-dark-blue btn-lg custom-dark-blue">Modificar</button>
+                    <div class="card-body">
+                        <form action="" method="POST" class="form">
+                            {% csrf_token %}
+                        {% if form.non_field_errors %}
+    {% for error in form.non_field_errors %}
+        <div class="alert alert-danger mt-2">{{ error }}</div>
+    {% endfor %}
+{% endif %}
+                            {% for field in form %}
+                                <div class="form-group mb-3"> <!-- Agregamos la clase mb-4 para el margen inferior -->
+                                    <label class="form-label text-dark">{{ field.label }}</label>
+
+                                    {% if field.name == 'fecha' %}
+                                        {{ field|add_class:"form-control" }}
+
+                                     {% else %}
+                                        {% if field.name == 'objeto' %}
+                                            <div class="input-wrapper">
+                                                <textarea name="{{ field.name }}" class="form-control custom-size" maxlength="{{ field.field.max_length }}">{{ field.value }}</textarea>
+                                            </div>
+                                        {% else %}
+                                            {{ field|add_class:"form-control" }}
+                                        {% endif %}
+                                    {% endif %}
+
+                                    {% if field.help_text %}
+                                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                                    {% endif %}
+                                    {% for error in field.errors %}
+                                        <div class="alert alert-danger mt-2">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            {% endfor %}
+
+                            <div class="mt-4">
+                                <button type="submit" class="btn btn-custom-dark-blue btn-lg custom-dark-blue">
+                                    Modificar
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 {% endblock %}

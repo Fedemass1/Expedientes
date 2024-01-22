@@ -1,5 +1,10 @@
 /* styles.css */
 
+.custom-thead th {
+        background-color: #1a3961 !important; /* Puedes ajustar el color según tus preferencias */
+        color: white !important; /* Puedes ajustar el color del texto según tus preferencias */
+    }
+
 .custom-btn {
     background-color: #007BFF;
     color: #fff;
@@ -38,12 +43,28 @@ div.dataTables_wrapper div.dataTables_length {
 .custom-button {
     background-color: #28a745; /* Fondo verde oscuro */
     border: 1px solid #77d38d; /* Borde verde claro */
+    width: 32px; /* Puedes ajustar el ancho según tus necesidades */
+    height: 32px; /* Puedes ajustar la altura según tus necesidades */
 }
 
 .custom-button:hover {
     background-color: #77d38d; /* Cambio de color al pasar el ratón */
     color: #28a745; /* Texto verde oscuro al pasar el ratón */
 }
+
+.custom-button-size {
+    width: 31px; /* Puedes ajustar el ancho según tus necesidades */
+    height: 31px; /* Puedes ajustar la altura según tus necesidades */
+}
+
+button.custom-button-size i {
+    margin-left: -1px;
+}
+
+ .custom-size {
+        height: 150px !important;
+        resize: none; /* Evita que el usuario pueda redimensionar el cuadro de texto */
+    }
 
 .custom-button2 {
     background-color: #1a3961; /* Fondo azul oscuro */
@@ -54,4 +75,154 @@ div.dataTables_wrapper div.dataTables_length {
 .custom-button2:hover {
     background-color: #2c5ca9; /* Cambio de color al pasar el ratón */
     color: #ffffff; /* Texto blanco al pasar el ratón */
+}
+
+.dataTables_wrapper .centered-vertical-align {
+    vertical-align: middle !important;
+}
+
+.dataTables_wrapper .centered-text {
+    text-align: center !important;
+
+}
+
+.button-container {
+    gap: 4px;
+    display: flex;
+    /*flex-wrap: wrap; !* Permite que los botones se envuelvan en líneas múltiples. Descomentar para que se muestre en cuadrado *!*/
+    align-items: center; /* Alineación vertical en el centro */
+}
+
+.justify-text {
+    text-align: justify !important;
+}
+
+/*Creo un estilo bootsrap a mano para el boton de motrar columnas del DataTable. Es la forma de que tome los estilos ya que bootstrap no lo estaba tomando de forma directa*/
+.btn-columnas-dt {
+    display: inline-block !important;
+    font-weight: 500 !important;
+    color: #fff !important;
+    text-align: center !important;
+    vertical-align: middle !important;
+    cursor: pointer !important;
+    background-color: #007bff !important;
+    border: none !important;
+    padding: .5rem 1rem !important;
+    font-size: .9rem !important;
+    line-height: 1.5 !important;
+    border-radius: .3rem !important;
+    transition: all .2s ease-in-out !important;
+}
+
+.btn-columnas-dt:hover {
+    background-color: #0056b3 !important;
+}
+
+.btn-columnas-dt:focus, .btn-columnas-dt.focus {
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.5) !important;
+}
+
+.dt-button-collection {
+    background-color: #007bff !important;
+    border-radius: .3rem !important;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2) !important;
+    padding: .5rem !important;
+    transform: translateX(-50%) !important;
+}
+
+.dt-button-collection .dt-button {
+    background-color: transparent !important;
+    border: none !important;
+    color: #fff !important;
+    padding: .5rem 1rem !important;
+    margin: .2rem !important;
+    transition: background-color .2s ease !important;
+    border-radius: .2rem !important;
+}
+
+.dt-button-collection .dt-button:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/*Aca termina lo de bootrap para el boton Mostrar columnas*/
+
+
+/*Mueve el boton de mostrar columnas del dataTable a la derecha de la pantalla */
+.dataTables_wrapper .dt-buttons {
+    float: right; /* Alinea el botón a la derecha */
+}
+
+
+.btn-excel {
+    margin-top: -5px;
+    display: inline-block !important;
+    padding: .375rem .65rem !important;
+    font-size: 1rem !important;
+    line-height: 1.2 !important;
+    text-align: center !important;
+    vertical-align: middle !important;
+    cursor: pointer !important;
+    color: #fff !important;
+    background-color: #198754 !important;
+    border: 1px solid #198754 !important;
+    border-radius: .5rem !important;
+    transition: all .2s ease-in-out !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .1), 0 1px 2px rgba(0, 0, 0, .2) !important; /* Agregamos una sombra más suave */
+    margin-right: -5px !important;
+}
+
+.btn-excel:hover {
+    color: #fff !important;
+    background-color: #157347 !important;
+    border-color: #146c43 !important;
+    transform: scale(1.05) !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, .2) !important; /* Aumentamos la sombra cuando se pasa el cursor por encima */
+}
+
+.btn-excel:focus, .btn-excel.focus {
+    outline: 0 !important;
+    box-shadow: 0 0 0 .25rem rgba(25, 135, 84, .5), 0 2px 6px rgba(0, 0, 0, .2) !important; /* Mantenemos la sombra más grande incluso cuando el botón está enfocado */
+}
+
+
+.btn-pdf {
+    margin-top: -5px;
+    display: inline-block !important;
+    padding: .375rem .55rem !important;
+    font-size: 1rem !important;
+    line-height: 1.2 !important;
+    text-align: center !important;
+    vertical-align: middle !important;
+    cursor: pointer !important;
+    color: #fff !important;
+    background-color: #dc3545 !important; /* Cambiamos el color de fondo a un rojo similar al logo de PDF */
+    border: 1px solid #dc3545 !important;
+    border-radius: .5rem !important;
+    transition: all .2s ease-in-out !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .1), 0 1px 2px rgba(0, 0, 0, .2) !important;
+    margin-right: 1000px !important;
+}
+
+.btn-pdf:hover {
+    color: #fff !important;
+    background-color: #c82333 !important; /* Oscurecemos el color de fondo cuando se pasa el cursor por encima */
+    border-color: #bd2130 !important;
+    transform: scale(1.05) !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, .2) !important;
+}
+
+.btn-pdf:focus, .btn-pdf.focus {
+    outline: 0 !important;
+    box-shadow: 0 0 0 .25rem rgba(220, 53, 69, .5), 0 2px 6px rgba(0, 0, 0, .2) !important;
+}
+
+
+.tarjeta_destacada {
+  background-color: #77d38d !important; /* Puedes cambiar el color de fondo a tu preferencia */
+  border: 2px solid #000000 !important; /* Puedes cambiar el estilo del borde a tu preferencia */
+
+}
+
+.negrita{
+    font-weight: bold;
 }

@@ -7,7 +7,6 @@
                 <div class="card">
                     <div class="card-body">
                         <h1 class="text-center mb-4">Agrega un Pase</h1>
-
                         <form method="post">
                             {% csrf_token %}
                             <div class="form-group">
@@ -16,6 +15,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="{{ form.nro_exp.id_for_label }}">Número de Expediente</label>
+
                                 {{ form.nro_exp }}
                             </div>
                             <div class="form-group">
@@ -23,11 +23,28 @@
                                 {{ form.area_origen }}
                             </div>
                             <div class="form-group">
+
                                 <label for="{{ form.area_receptora.id_for_label }}">Área Receptora</label>
                                 {{ form.area_receptora }}
+                                {% if form.area_receptora.errors %}
+                                    {% for error in form.area_receptora.errors %}
+                                        <small class="text-danger">{{ error }}</small>
+                                    {% endfor %}
+                                {% endif %}
                             </div>
+
+                            {% if form.non_field_errors %}
+                                {% for error in form.non_field_errors %}
+                                    {% if "El área de origen y la receptora no pueden ser iguales." in error %}
+                                        <small class="text-danger">{{ error }}</small>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+
+
                             <div class="text-center">
-                                <button type="submit" class="btn btn-primary">Guardar</button>
+                                <button type="submit" class="btn btn-primary" style="margin-top: 20px;">Realizar pase
+                                </button>
                             </div>
                         </form>
                     </div>
@@ -35,4 +52,36 @@
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Deshabilitar el campo número de expediente
+            var nroExpField = document.getElementById("id_nro_exp");  // Ajusta el selector según la estructura real de tu formulario
+            console.log("Campo exp", nroExpField)
+            // Verificar si el campo número de expediente existe antes de intentar modificarlo
+            if (nroExpField) {
+                nroExpField.disabled = true;
+
+            }
+
+            // Deshabilitar el campo de área de origen
+            var areaOrigenField = document.getElementById("id_area_origen");  // Cambia "id_area_origen" al ID real del campo
+            console.log(areaOrigenField)
+            // Verificar si el campo de área de origen existe antes de intentar modificarlo
+            if (areaOrigenField) {
+                areaOrigenField.disabled = true;
+            }
+
+            // Al enviar el formulario, habilitar el campo de área de origen
+            var formulario = document.querySelector("form");  // Ajusta el selector según la estructura real de tu formulario
+
+            if (formulario) {
+                formulario.addEventListener("submit", function () {
+                    areaOrigenField.disabled = false;
+                    nroExpField.disabled = false;
+                });
+            }
+        });
+    </script>
+
 {% endblock %}
+

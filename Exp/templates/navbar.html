@@ -9,47 +9,54 @@
 </head>
 <body>
 <div class="main-content">
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top ">
-    <div class="container-fluid">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top ">
+        <div class="container-fluid">
 
-        <a class="navbar-brand" href="#"></a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
-                aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNavDropdown">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/Exp/">Expedientes</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/Exp/prueba/">Prueba</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Pricing</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                       aria-expanded="false">
-                        Herramientas
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="/Exp/crear_area/">ABM - Areas</a></li>
-                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li>
-                    </ul>
-                </li>
-            </ul>
+            <a class="navbar-brand" href="#"></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+                    aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/Exp/">Expedientes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Exp/prueba/">Prueba</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Pricing</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                           aria-expanded="false">
+                            Herramientas
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/Exp/crear_area/">ABM - Areas</a></li>
+                            <li><a class="dropdown-item" href="/Exp/crear_iniciador/">ABM - Iniciadores</a></li>
+                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <div class="user-info m">
+                    {% if user.is_authenticated %}
+                        <h5>
+            <span class="badge" style="margin-right: 65px;">
+                <i class="bi bi-person"></i> {{ user.get_username }}&nbsp; | &nbsp;
+                <span style="color: #3498db;">{{ user.area.area }}</span>
+            </span>
+                        </h5>
+                    {% endif %}
+                </div>
+
+            </div>
+
         </div>
-
-        <!--Agrego un botón de usuario a la derecha del navbar-->
-        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <button class="btn btn-primary me-md-4 custom-btn" type="button">Usuario</button>
-        </div>
-        <!--Fin del botón-->
-
-    </div>
-</nav>
+    </nav>
 </div>
 </body>
 </html>

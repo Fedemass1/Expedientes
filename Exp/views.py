@@ -1,12 +1,14 @@
-from django.http import JsonResponse
-from django.shortcuts import render, redirect
-from django.urls import reverse_lazy
-from django.views import View
-from django.views.generic import UpdateView, CreateView, DeleteView, DetailView
+from datetime import timedelta
 
-from .forms import PaseForm, AreaForm
-from .models import Expedientes, ExpedientesPrueba, Pases, Areas
 from django import forms
+from django.db import IntegrityError
+from django.http import JsonResponse
+from django.shortcuts import render, get_object_or_404
+from django.urls import reverse_lazy
+from django.utils import timezone
+from django.views.generic import UpdateView, CreateView, DeleteView, DetailView
+from .forms import PaseForm, AreaForm, ExpedientesPruebaForm
+from .models import Expedientes, ExpedientesPrueba, Pases, Areas, Iniciadores
 
 
 def index(request):
@@ -23,25 +25,28 @@ def list_expedientes(request):
     return JsonResponse(data)
 
 
-
+# Modifique mi función original de JsonResponse para que incluya el campo con el área en la que se encuentra el expediente
 def list_expedientes_prueba(request):
     expedientes_prueba = ExpedientesPrueba.objects.all()
     expedientes_data = []
 
     for expediente_prueba in expedientes_prueba:
-        pases = expediente_prueba.pases.order_by('-fecha_pase')
+        pases = expediente_prueba.pases.order_by('-id')
         ultimo_pase = pases.first() if pases else None
 
         expediente_data = {
             'id': expediente_prueba.id,
-            'fecha': expediente_prueba.fecha.strftime('%Y-%m-%d') if expediente_prueba.fecha else None,
+            'fecha': expediente_prueba.fecha.strftime('%d/%m/%Y') if expediente_prueba.fecha else None,
             'nro_exp': expediente_prueba.nro_exp,
-            'iniciador': expediente_prueba.iniciador,
+            'iniciador': expediente_prueba.iniciador.iniciador if expediente_prueba.iniciador else None,
+            'sigla': expediente_prueba.iniciador.sigla if expediente_prueba.iniciador else None,
             'objeto': expediente_prueba.objeto,
             'nro_resol_rectorado': expediente_prueba.nro_resol_rectorado,
             'nro_resol_CS': expediente_prueba.nro_resol_CS,
             'observaciones': expediente_prueba.observaciones,
-            'ultimo_pase': {'area_receptora': ultimo_pase.area_receptora.area, 'fecha_pase': ultimo_pase.fecha_pase} if ultimo_pase else None,
+            'area_creacion': expediente_prueba.area_creacion.area if expediente_prueba.area_creacion else None,
+            'ultimo_pase': {'area_receptora': ultimo_pase.area_receptora.area,
+                            'fecha_pase': ultimo_pase.fecha_pase} if ultimo_pase else None,
         }
 
         expedientes_data.append(expediente_data)
@@ -49,7 +54,7 @@ def list_expedientes_prueba(request):
     return JsonResponse({'expedientes_prueba': expedientes_data}, safe=False)
 
 
-#La deje de usar ya que tuve que complejizarla con la función de arriba para poder traer el area receptora desde otra tabla
+# La deje de usar ya que tuve que complejizarla con la función de arriba para poder traer el area receptora desde otra tabla
 # def list_expedientes_prueba(request):
 #     expedientes_prueba = list(ExpedientesPrueba.objects.values())
 #     data = {'expedientes_prueba': expedientes_prueba}  # 'expedientes' (key) debe ser igual al nombre de mi tabla
@@ -72,6 +77,20 @@ class ExpActualizacionPrueba(UpdateView):
     template_name = "editar_exp.html"
     fields = ['fecha', 'nro_exp', 'iniciador', 'objeto', 'nro_resol_rectorado', 'nro_resol_CS', 'observaciones']
 
+    def form_valid(self, form):
+        try:
+            response = super().form_valid(form)
+            return response
+        except IntegrityError:
+            form.add_error(None, 'La combinación de número de expediente y año ya existe.')
+            return self.form_invalid(form)
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields['fecha'].widget = forms.DateInput(attrs={'type': 'date', 'class': 'form-control'},
+                                                      format='%Y-%m-%d')
+        return form
+
     def get_success_url(self):
         print(f"get_success_url called. PK: {self.object.pk}")
         # Utiliza reverse_lazy para construir la URL en base de la función index. La función index dirige a '/Exp'
@@ -84,9 +103,8 @@ class ExpActualizacionPrueba(UpdateView):
 
 
 class ExpAgregarPrueba(CreateView):
-    model = ExpedientesPrueba
     template_name = "agregar_exp.html"
-    fields = ['fecha', 'nro_exp', 'iniciador', 'objeto', 'nro_resol_rectorado', 'nro_resol_CS', 'observaciones']
+    form_class = ExpedientesPruebaForm
     success_url = '/Exp/prueba'
 
     def get_context_data(self, **kwargs):
@@ -108,8 +126,13 @@ class ExpAgregarPrueba(CreateView):
         return context
 
     def form_valid(self, form):
+        # Obtener el área correspondiente al usuario actual
+        area_usuario = self.request.user.area  # Ajusta esto según la relación entre Usuario y Área en tu modelo
+        # Asignar el área al formulario antes de guardarlo
+        form.instance.area_creacion = area_usuario
         # Asignar el siguiente número de expediente al formulario antes de guardarlo
         form.instance.nro_exp = self.get_context_data()['siguiente_nro_exp']
+        # Asignar la fecha y hora actuales al formulario antes de guardarlo
         return super().form_valid(form)
 
 
@@ -129,9 +152,20 @@ class Pase(CreateView):
         print(form.errors)
         return super().form_invalid(form)
 
+    # def form_valid(self, form):
+    #     response = super().form_valid(form)
+    #     pase = get_object_or_404(Pases, pk=self.object.pk)
+    #     print(pase.fecha_pase)
+    #     return response
+
     def get_initial(self):
-        initial = super().get_initial()
-        initial['nro_exp'] = self.kwargs['pk']
+        expediente_prueba = ExpedientesPrueba.objects.get(pk=self.kwargs['pk'])
+
+        initial = {
+            'exp_year': expediente_prueba.exp_year,
+            'nro_exp': self.kwargs['pk'],
+        }
+
         return initial
 
 
@@ -152,7 +186,58 @@ class CrearArea(CreateView):
         form.fields['area'].label = False
         return form
 
+
+class CrearIniciador(CreateView):
+    model = Iniciadores
+    template_name = 'crear_iniciador.html'
+    success_url = '/Exp/crear_iniciador/'
+    fields = ['iniciador', 'sigla']
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['iniciadores'] = Iniciadores.objects.all()
+        return context
+
+
 class DetalleExpediente(DetailView):
+    model = ExpedientesPrueba
+    template_name = 'detalle_exp.html'
+    context_object_name = 'expediente'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        try:
+            # Intentar obtener el último pase para el expediente actual
+            ultimo_pase = Pases.objects.filter(nro_exp=self.object).latest('fecha_pase')
+            numero_pases = Pases.objects.filter(nro_exp=self.object).count()
+            fecha_ultimo_pase = Pases.objects.filter(nro_exp=self.object).latest('fecha_pase')
+
+
+        except Pases.DoesNotExist:
+            # Si no hay pases, asignar None al último pase
+            ultimo_pase = None
+            numero_pases = None
+            fecha_ultimo_pase = None
+            print("No hay pases para este expediente")
+
+        # Agregar el número de pases al contexto
+        context['numero_pases'] = numero_pases
+
+        # Agregar el último pase al contexto
+        context['ultimo_pase'] = ultimo_pase
+
+        # Agrego la fecha del último pase
+        context['fecha_ultimo_pase'] = fecha_ultimo_pase
+        print(context['fecha_ultimo_pase'])
+
+        # Agregar el área de creación al contexto, incluso si no hay pases
+        context['area_creacion'] = self.object.area_creacion
+
+        return context
+
+
+class PaseExpediente(DetailView):
     model = ExpedientesPrueba
     template_name = "lista_pases.html"
 
@@ -160,20 +245,5 @@ class DetalleExpediente(DetailView):
         context = super().get_context_data(**kwargs)
         # Obtén los pases ordenados por la fecha de pase de forma descendente (más nuevo primero)
         context['pases'] = self.object.pases.all().order_by('-fecha_pase')
+
         return context
-
-#Cuando uso clase basada en vista, debo llamar al objeto desde mi html usando object. Distinto
-#es si se utiliza la función de abajo
-
-
-# def detalle_expediente(request, nro_exp_id):
-#     expediente = ExpedientesPrueba.objects.get(pk=nro_exp_id)
-#
-#     # Obtén los pases ordenados por la fecha de pase de forma descendente (más nuevo primero)
-#     pases_ordenados = expediente.pases.all().order_by('-fecha_pase')
-#
-#     # Agrega los pases ordenados al contexto
-#     context = {'expediente': expediente, 'pases': pases_ordenados}
-#
-#     return render(request, 'lista_pases.html', context)
-

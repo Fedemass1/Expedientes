@@ -22,4 +22,5 @@ urlpatterns = [
     path('', include('App.urls')),
     path('geografia/', include('geografia.urls')),
     path('Exp/', include('Exp.urls')),
+    path('account/', include('Accounts.urls')),
 ]

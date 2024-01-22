@@ -215,3 +215,14 @@ button.custom-button-size i {
     outline: 0 !important;
     box-shadow: 0 0 0 .25rem rgba(220, 53, 69, .5), 0 2px 6px rgba(0, 0, 0, .2) !important;
 }
+
+
+.tarjeta_destacada {
+  background-color: #77d38d !important; /* Puedes cambiar el color de fondo a tu preferencia */
+  border: 2px solid #000000 !important; /* Puedes cambiar el estilo del borde a tu preferencia */
+
+}
+
+.negrita{
+    font-weight: bold;
+}

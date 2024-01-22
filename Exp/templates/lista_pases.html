@@ -3,17 +3,17 @@
 {% block cambio %}
 
     <div class="col-md-6" style="margin-left: 50px;">
-        <h4 class="mb-4">Pases</h4>
+        <h4 class="mb-4">Historial de pases del Expediente N° {{ expedientesprueba.nro_exp|stringformat:"03d" }}-{{ expedientesprueba.iniciador.sigla }}-{{ expedientesprueba.fecha|date:"Y" }}</h4>
         {% if not pases %}
             <p class="mb-4">No hay pases para este expediente</p>
         {% else %}
             {% for pase in pases %} {# pases es el related_name del modelo #}
-                <div class="card mb-3">
+                <div class="card mb-3 {% if forloop.first %}tarjeta_destacada{% endif %}">
                     <div class="card-body">
-                        <h6 class="card-subtitle mb-2 text-muted">
+                        <h6 class="card-subtitle mb-2  {% if forloop.first %}negrita{% endif %}">
                             Área receptora: {{ pase.area_receptora}}
                         </h6>
-                        <p class="card-text">
+                        <p class="card-text  {% if forloop.first %}negrita{% endif %}">
                             Fecha del pase: {{ pase.fecha_pase|date:"d/m/Y H:i" }}
                         </p>
                         <!-- Otros detalles del pase que quieras mostrar -->

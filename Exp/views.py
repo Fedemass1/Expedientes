@@ -11,7 +11,6 @@ from .forms import PaseForm, AreaForm, ExpedientesPruebaForm
 from .models import Expedientes, ExpedientesPrueba, Pases, Areas, Iniciadores
 
 
-
 def index(request):
     return render(request, 'index6.html')
 
@@ -187,6 +186,7 @@ class CrearArea(CreateView):
         form.fields['area'].label = False
         return form
 
+
 class CrearIniciador(CreateView):
     model = Iniciadores
     template_name = 'crear_iniciador.html'
@@ -199,8 +199,45 @@ class CrearIniciador(CreateView):
         return context
 
 
-
 class DetalleExpediente(DetailView):
+    model = ExpedientesPrueba
+    template_name = 'detalle_exp.html'
+    context_object_name = 'expediente'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        try:
+            # Intentar obtener el último pase para el expediente actual
+            ultimo_pase = Pases.objects.filter(nro_exp=self.object).latest('fecha_pase')
+            numero_pases = Pases.objects.filter(nro_exp=self.object).count()
+            fecha_ultimo_pase = Pases.objects.filter(nro_exp=self.object).latest('fecha_pase')
+
+
+        except Pases.DoesNotExist:
+            # Si no hay pases, asignar None al último pase
+            ultimo_pase = None
+            numero_pases = None
+            fecha_ultimo_pase = None
+            print("No hay pases para este expediente")
+
+        # Agregar el número de pases al contexto
+        context['numero_pases'] = numero_pases
+
+        # Agregar el último pase al contexto
+        context['ultimo_pase'] = ultimo_pase
+
+        # Agrego la fecha del último pase
+        context['fecha_ultimo_pase'] = fecha_ultimo_pase
+        print(context['fecha_ultimo_pase'])
+
+        # Agregar el área de creación al contexto, incluso si no hay pases
+        context['area_creacion'] = self.object.area_creacion
+
+        return context
+
+
+class PaseExpediente(DetailView):
     model = ExpedientesPrueba
     template_name = "lista_pases.html"
 
@@ -208,6 +245,5 @@ class DetalleExpediente(DetailView):
         context = super().get_context_data(**kwargs)
         # Obtén los pases ordenados por la fecha de pase de forma descendente (más nuevo primero)
         context['pases'] = self.object.pases.all().order_by('-fecha_pase')
+
         return context
-
-

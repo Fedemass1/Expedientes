@@ -89,18 +89,18 @@ const initDataTable = async () => {
 };
 
 const redirectToEditView = (expediente_pruebaId) => {
-    window.location.href = `http://10.10.1.31:8000/Exp/list_expedientes_prueba/${expediente_pruebaId}/`;
+    window.location.href = `http://10.10.1.31:8000/Exp/edit_prueba/${expediente_pruebaId}/`;
 };
 
 const redirectToDeleteView = (expediente_pruebaId) => {
-    window.location.href = `http://10.10.1.31:8000/Exp/list_expedientes_prueba/${expediente_pruebaId}/`;
+    window.location.href = `http://10.10.1.31:8000/Exp/eliminar_prueba/${expediente_pruebaId}/`;
 };
 
 const redirectToPaseView = (expediente_pruebaId) => {
-    window.location.href = `http://10.10.1.31:8000/Exp/list_expedientes_prueba/${expediente_pruebaId}/`;
+    window.location.href = `http://10.10.1.31:8000/Exp/pase/${expediente_pruebaId}/`;
 };
 const redirectToDetalleView = (expediente_pruebaId) => {
-    window.location.href = `http://10.10.1.31:8000/Exp/list_expedientes_prueba/${expediente_pruebaId}/`;
+    window.location.href = `http://10.10.1.31:8000/Exp/detalle_expediente/${expediente_pruebaId}/`;
 };
 
 
@@ -194,7 +194,7 @@ $('.btn-pdf').css('margin-left', '10px');
     $('.add-button-container').html(`
         <div class="btn-toolbar" role="toolbar">
             <div class="btn-group mr-2">
-                <button class="btn btn-success" onclick="window.location.href='http://10.10.1.31:8000/Exp/list_expedientes_prueba/'">
+                <button class="btn btn-success" onclick="window.location.href='http://10.10.1.31:8000/Exp/agregar_prueba/'">
                     Agregar Nuevo Expediente
                 </button>
             </div>

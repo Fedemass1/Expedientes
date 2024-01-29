@@ -89,24 +89,24 @@ const initDataTable = async () => {
 };
 
 const redirectToEditView = (expediente_pruebaId) => {
-    window.location.href = `http://localhost:8000/Exp/edit_prueba/${expediente_pruebaId}/`;
+    window.location.href = `http://10.10.1.31:8000/Exp/list_expedientes_prueba/${expediente_pruebaId}/`;
 };
 
 const redirectToDeleteView = (expediente_pruebaId) => {
-    window.location.href = `http://localhost:8000/Exp/eliminar_prueba/${expediente_pruebaId}/`;
+    window.location.href = `http://10.10.1.31:8000/Exp/list_expedientes_prueba/${expediente_pruebaId}/`;
 };
 
 const redirectToPaseView = (expediente_pruebaId) => {
-    window.location.href = `http://localhost:8000/Exp/pase/${expediente_pruebaId}/`;
+    window.location.href = `http://10.10.1.31:8000/Exp/list_expedientes_prueba/${expediente_pruebaId}/`;
 };
 const redirectToDetalleView = (expediente_pruebaId) => {
-    window.location.href = `http://localhost:8000/Exp/detalle_expediente/${expediente_pruebaId}/`;
+    window.location.href = `http://10.10.1.31:8000/Exp/list_expedientes_prueba/${expediente_pruebaId}/`;
 };
 
 
 const listExpedientes = async () => {
     try {
-        const response = await fetch('http://localhost:8000/Exp/list_expedientes_prueba/');
+        const response = await fetch('http://10.10.1.31:8000/Exp/list_expedientes_prueba/');
         const data = await response.json();
 
         let expedientes = data.expedientes_prueba.map((expediente_prueba, index_prueba) => {
@@ -194,7 +194,7 @@ $('.btn-pdf').css('margin-left', '10px');
     $('.add-button-container').html(`
         <div class="btn-toolbar" role="toolbar">
             <div class="btn-group mr-2">
-                <button class="btn btn-success" onclick="window.location.href='http://localhost:8000/Exp/agregar_prueba/'">
+                <button class="btn btn-success" onclick="window.location.href='http://10.10.1.31:8000/Exp/list_expedientes_prueba/'">
                     Agregar Nuevo Expediente
                 </button>
             </div>

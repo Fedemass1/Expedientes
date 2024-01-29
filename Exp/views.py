@@ -1,5 +1,7 @@
 from datetime import timedelta
 
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.db.models import Q
 from django import forms
 from django.db import IntegrityError
 from django.http import JsonResponse
@@ -7,7 +9,7 @@ from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.generic import UpdateView, CreateView, DeleteView, DetailView
-from .forms import PaseForm, AreaForm, ExpedientesPruebaForm
+from .forms import PaseForm, AreaForm, ExpedientesPruebaForm, IniciadorForm
 from .models import Expedientes, ExpedientesPrueba, Pases, Areas, Iniciadores
 
 
@@ -72,10 +74,12 @@ class ExpActualizacion(UpdateView):
         return reverse_lazy('index')
 
 
-class ExpActualizacionPrueba(UpdateView):
+class ExpActualizacionPrueba(PermissionRequiredMixin, UpdateView):
     model = ExpedientesPrueba
     template_name = "editar_exp.html"
     fields = ['fecha', 'nro_exp', 'iniciador', 'objeto', 'nro_resol_rectorado', 'nro_resol_CS', 'observaciones']
+    permission_required = 'exp.change_expedienteprueba'
+    permission_denied_message = 'No esta autorizado'
 
     def form_valid(self, form):
         try:
@@ -188,15 +192,17 @@ class CrearArea(CreateView):
 
 
 class CrearIniciador(CreateView):
-    model = Iniciadores
+    form_class = IniciadorForm
     template_name = 'crear_iniciador.html'
     success_url = '/Exp/crear_iniciador/'
-    fields = ['iniciador', 'sigla']
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['iniciadores'] = Iniciadores.objects.all()
         return context
+
+
 
 
 class DetalleExpediente(DetailView):
@@ -247,3 +253,16 @@ class PaseExpediente(DetailView):
         context['pases'] = self.object.pases.all().order_by('-fecha_pase')
 
         return context
+
+
+def list_iniciadores(request):
+    search = request.GET.get('q')  # Select2 envía el texto de búsqueda como un parámetro 'q'
+    if search:
+        # Filtra los Iniciadores cuyo iniciador o sigla contienen el texto de búsqueda
+        iniciadores = Iniciadores.objects.filter(Q(iniciador__icontains=search) | Q(sigla__icontains=search))
+    else:
+        # Si no hay texto de búsqueda, devuelve todos los Iniciadores
+        iniciadores = Iniciadores.objects.all()
+    iniciadores_list = list(iniciadores.values('sigla', 'iniciador'))
+    data = {'iniciadores': iniciadores_list}
+    return JsonResponse(data)

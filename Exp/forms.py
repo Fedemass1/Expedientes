@@ -71,8 +71,7 @@ class AreaForm(forms.ModelForm):
 
 
 class ExpedientesPruebaForm(forms.ModelForm):
-    iniciador = forms.ModelChoiceField(queryset=Iniciadores.objects.all(),
-                                       widget=forms.Select(attrs={'class': 'form-control'}))
+    iniciador = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
 
     class Meta:
         model = ExpedientesPrueba
@@ -80,3 +79,29 @@ class ExpedientesPruebaForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+    def clean_iniciador(self):
+        # Obtén el valor del campo 'iniciador'
+        sigla = self.cleaned_data.get('iniciador')
+
+        # Intenta obtener un objeto Iniciador con la sigla proporcionada
+        try:
+            iniciador = Iniciadores.objects.get(sigla=sigla)
+        except Iniciadores.DoesNotExist:
+            # Si no existe tal Iniciador, genera un error de validación
+            raise forms.ValidationError('Select a valid choice. That choice is not one of the available choices.')
+
+        # Si todo va bien, devuelve el objeto Iniciador
+        return iniciador
+
+
+class IniciadorForm(forms.ModelForm):
+    class Meta:
+        model = Iniciadores
+        fields = ['iniciador', 'sigla']
+
+    def clean_sigla(self):
+        sigla = self.cleaned_data.get('sigla')
+        if Iniciadores.objects.filter(sigla=sigla).exists():
+            raise forms.ValidationError('No es posible realizar esta operación. Ya existe un Iniciador con esta sigla.')
+        return sigla

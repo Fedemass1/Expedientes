@@ -24,6 +24,17 @@
             margin-left: 10px; /* Ajusta este valor según tu preferencia */
         }
 
+        {#Aplican a select2. Aunque el ID los marque en gris, se están aplicando los estilos#}
+        .select2-selection__rendered {
+        line-height: 38px !important;
+    }
+    .select2-container .select2-selection--single {
+        height: 38px !important;
+    }
+    .select2-selection__arrow {
+        height: 34px !important;
+    }
+
     </style>
 
     <div class="container mt-4">
@@ -49,10 +60,43 @@
                                     {% else %}
                                         {% if field.name == 'objeto' %}
                                             <div class="input-wrapper">
-                                                <textarea name="{{ field.name }}" class="form-control custom-size" maxlength="{{ field.field.max_length }}"></textarea>
+                                                <textarea name="{{ field.name }}" class="form-control custom-size"
+                                                          maxlength="{{ field.field.max_length }}"></textarea>
                                             </div>
                                         {% else %}
-                                            {{ field|add_class:"form-control" }}
+                                            {% if field.name == 'iniciador' %}
+                                                <!-- Inicializa Select2 en el campo iniciador -->
+                                                <select id="iniciadorSelect2" name="{{ field.name }}"
+                                                        class="form-control">
+                                                    <!-- Las opciones se cargarán dinámicamente -->
+                                                </select>
+                                                <script>
+                                                    $(document).ready(function () {
+                                                        $('#iniciadorSelect2').select2({
+                                                            placeholder: 'Seleccione el iniciador del expediente',
+                                                            allowClear: true,
+                                                            ajax: {
+                                                                url: 'http://localhost:8000/Exp/list_iniciadores/', // La URL de tu endpoint que devuelve los iniciadores
+                                                                dataType: 'json',
+                                                                delay: 250,
+                                                                processResults: function (data) {
+                                                                    return {
+                                                                        results: data.iniciadores.map(function (iniciador) {
+                                                                            return {
+                                                                                id: iniciador.sigla,  // Asegúrate de que 'id' es el nombre correcto de la propiedad
+                                                                                text: iniciador.iniciador  // Asegúrate de que 'nombre' es el nombre correcto de la propiedad
+                                                                            };
+                                                                        })
+                                                                    };
+                                                                },
+                                                                cache: true
+                                                            }
+                                                        });
+                                                    });
+                                                </script>
+                                            {% else %}
+                                                {{ field|add_class:"form-control" }}
+                                            {% endif %}
 
                                         {% endif %}
                                     {% endif %}
@@ -69,7 +113,7 @@
                                 <button type="submit" class="btn btn-custom-dark-green custom-dark-green">
                                     Agregar
                                 </button>
-                                 <a href="{% url 'index_prueba' %}" class="btn btn-danger btn-cancelar">
+                                <a href="{% url 'index_prueba' %}" class="btn btn-danger btn-cancelar">
                                     Cancelar
                                 </a>
                             </div>

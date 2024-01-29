@@ -5,7 +5,7 @@ const dataTableOptions = {
     columnDefs: [
         {width: '8px', targets: 0, className: 'no-toggle'},
         {width: '70px', targets: 1, className: 'no-toggle'},
-        {width: '70px', targets: 2, className: 'no-toggle'},
+        {width: '75px', targets: 2, className: 'no-toggle'},
         {width: '150px', targets: 3},
         {targets: 4, className: 'no-toggle'},
         {width: '100px', targets: 5},

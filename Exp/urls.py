@@ -10,11 +10,12 @@ urlpatterns = [
     path('list_expedientes_prueba/', views.list_expedientes_prueba, name='list_expedientes_prueba'),
     path('edit/<int:pk>/', ExpActualizacion.as_view(), name='edit_expedientes'),
     path('edit_prueba/<int:pk>/', ExpActualizacionPrueba.as_view(), name='edit_expedientes_prueba'),
-    path('agregar_prueba/', ExpAgregarPrueba.as_view(), name='edit_expedientes_prueba'),
+    path('agregar_prueba/', ExpAgregarPrueba.as_view(), name='agregar_expedientes_prueba'),
     path('eliminar_prueba/<int:pk>/', ExpEliminar.as_view(), name='delete_expedientes_prueba'),
     path('pase/<int:pk>/', Pase.as_view(), name='pase'),
     path('crear_area/', CrearArea.as_view(), name='crear_area'),
     path('crear_iniciador/', CrearIniciador.as_view(), name='crear_iniciador'),
     path('detalle_expediente/<int:pk>/', DetalleExpediente.as_view(), name='detalle_expediente'),
     path('pase_expediente/<int:pk>/', PaseExpediente.as_view(), name='pase_expediente'),
+    path('list_iniciadores/', views.list_iniciadores, name='list_iniciadores'),
 ]

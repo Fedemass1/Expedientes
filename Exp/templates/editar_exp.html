@@ -20,6 +20,9 @@
             margin-bottom: 20px;
         }
 
+       .btn-cancelar {
+            margin-left: 10px; /* Ajusta este valor según tu preferencia */
+        }
 
     </style>
 
@@ -65,9 +68,12 @@
                             {% endfor %}
 
                             <div class="mt-4">
-                                <button type="submit" class="btn btn-custom-dark-blue btn-lg custom-dark-blue">
+                                <button type="submit" class="btn btn-custom-dark-blue custom-dark-blue">
                                     Modificar
                                 </button>
+                                 <a href="{% url 'index_prueba' %}" class="btn btn-danger btn-cancelar">
+                                    Cancelar
+                                </a>
                             </div>
                         </form>
                     </div>

@@ -154,7 +154,7 @@ button.custom-button-size i {
 
 
 .btn-excel {
-    margin-top: -5px;
+    margin-top: 0;
     display: inline-block !important;
     padding: .375rem .65rem !important;
     font-size: 1rem !important;
@@ -169,6 +169,8 @@ button.custom-button-size i {
     transition: all .2s ease-in-out !important;
     box-shadow: 0 1px 3px rgba(0, 0, 0, .1), 0 1px 2px rgba(0, 0, 0, .2) !important; /* Agregamos una sombra más suave */
     margin-right: -5px !important;
+    position: absolute;
+    left: 0;
 }
 
 .btn-excel:hover {
@@ -186,7 +188,7 @@ button.custom-button-size i {
 
 
 .btn-pdf {
-    margin-top: -5px;
+    margin-top: 0;
     display: inline-block !important;
     padding: .375rem .55rem !important;
     font-size: 1rem !important;
@@ -200,7 +202,9 @@ button.custom-button-size i {
     border-radius: .5rem !important;
     transition: all .2s ease-in-out !important;
     box-shadow: 0 1px 3px rgba(0, 0, 0, .1), 0 1px 2px rgba(0, 0, 0, .2) !important;
-    margin-right: 1000px !important;
+    margin-left: 0 !important;
+    position: absolute;
+    left: 40px;
 }
 
 .btn-pdf:hover {
@@ -218,8 +222,9 @@ button.custom-button-size i {
 
 
 .tarjeta_destacada {
-  background-color: #77d38d !important; /* Puedes cambiar el color de fondo a tu preferencia */
-  border: 2px solid #000000 !important; /* Puedes cambiar el estilo del borde a tu preferencia */
+  background-color: #f8d7da; /* Fondo rojo claro */
+  border: 2px solid #dc3545; /* Borde rojo oscuro */
+  color: #721c24; /* Texto oscuro */
 
 }
 

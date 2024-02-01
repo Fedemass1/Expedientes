@@ -11,16 +11,29 @@
             font-size: 1.2rem; /* Ajusta el tamaño según tus preferencias */
         }
 
-         .user-info {
+        .user-info {
             margin-top: 0.2rem;
             margin-bottom: auto;
         }
 
-         .navbar {
+        .navbar {
             padding: 5px; /* Ajusta el padding según tus preferencias */
             line-height: 1.5; /* Ajusta el line-height según tus preferencias */
 
         }
+
+.active {
+    color: #fff; /* Cambia esto al color que quieras para el texto */
+    background-color: #007bff; /* Cambia esto al color que quieras para el fondo */
+    border-radius: 5px; /* Agrega bordes redondeados */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Agrega una transición suave al cambiar el color de fondo y el color del texto */
+}
+
+.active:hover {
+    background-color: #0056b3; /* Cambia el color de fondo cuando se pasa el mouse por encima */
+    color: #ddd; /* Cambia el color del texto cuando se pasa el mouse por encima */
+}
+
     </style>
 
 </head>
@@ -37,10 +50,18 @@
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/Exp/">Expedientes</a>
+                        <a class="nav-link {% if request.path == '/Exp/prueba/' %}active{% endif %}"
+                           href="/Exp/prueba/"
+                           {% if request.path == '/Exp/prueba/' %}aria-current="page"{% endif %}>
+                            Expedientes
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/Exp/prueba/">Prueba</a>
+                        <a class="nav-link {% if request.path == '/Exp/' %}active{% endif %}"
+                           href="/Exp/"
+                           {% if request.path == '/Exp/' %}aria-current="page"{% endif %}>
+                            Pases
+                        </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Pricing</a>
@@ -81,5 +102,7 @@
         </div>
     </nav>
 </div>
+
+
 </body>
 </html>

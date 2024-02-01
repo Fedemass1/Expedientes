@@ -1,5 +1,6 @@
 let dataTable;
 let dataTableIsInitialized = false;
+var API_BASE_URL = location.hostname === 'localhost' ? 'http://localhost:8000' : 'http://10.10.1.31:8000';
 
 const dataTableOptions = {
     columnDefs: [
@@ -124,7 +125,7 @@ const redirectToDetalleView = (expediente_pruebaId) => {
 
 const listExpedientes = async () => {
     try {
-        const response = await fetch('http://localhost:8000/Exp/list_expedientes_prueba/');
+        const response = await fetch(`${API_BASE_URL}/Exp/list_expedientes_prueba/`);
         const data = await response.json();
 
         let expedientes = data.expedientes_prueba.map((expediente_prueba, index_prueba) => {

@@ -1,26 +1,24 @@
-from datetime import timedelta
-
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from django.db.models import Q
 from django import forms
 from django.db import IntegrityError
 from django.http import JsonResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.utils import timezone
 from django.views.generic import UpdateView, CreateView, DeleteView, DetailView
-from .forms import PaseForm, AreaForm, ExpedientesPruebaForm, IniciadorForm
+from .forms import PaseForm, ExpedientesPruebaForm, IniciadorForm
 from .models import Expedientes, ExpedientesPrueba, Pases, Areas, Iniciadores
 
-
+@login_required
 def index(request):
     return render(request, 'index6.html')
 
-
+@login_required
 def index_prueba(request):
     return render(request, 'index6_prueba.html')
 
-
+@login_required
 def list_expedientes(request):
     expedientes = list(Expedientes.objects.values())
     data = {'expedientes': expedientes}  # 'expedientes' (key) debe ser igual al nombre de mi tabla
@@ -28,6 +26,7 @@ def list_expedientes(request):
 
 
 # Modifique mi función original de JsonResponse para que incluya el campo con el área en la que se encuentra el expediente
+@login_required
 def list_expedientes_prueba(request):
     expedientes_prueba = ExpedientesPrueba.objects.all()
     expedientes_data = []
@@ -53,6 +52,8 @@ def list_expedientes_prueba(request):
 
         expedientes_data.append(expediente_data)
 
+
+
     return JsonResponse({'expedientes_prueba': expedientes_data}, safe=False)
 
 
@@ -63,7 +64,7 @@ def list_expedientes_prueba(request):
 #     return JsonResponse(data)
 
 
-class ExpActualizacion(UpdateView):
+class ExpActualizacion(LoginRequiredMixin, UpdateView):
     model = Expedientes
     template_name = "editar_exp.html"
     fields = ['fecha', 'nro_exp', 'iniciador', 'objeto', 'nro_resol_rectorado', 'nro_resol_CS', 'observaciones']
@@ -74,11 +75,11 @@ class ExpActualizacion(UpdateView):
         return reverse_lazy('index')
 
 
-class ExpActualizacionPrueba(PermissionRequiredMixin, UpdateView):
+class ExpActualizacionPrueba(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = ExpedientesPrueba
     template_name = "editar_exp.html"
     fields = ['fecha', 'nro_exp', 'iniciador', 'objeto', 'nro_resol_rectorado', 'nro_resol_CS', 'observaciones']
-    permission_required = 'exp.change_expedienteprueba'
+    permission_required = 'Exp.change_expedientesprueba'
     permission_denied_message = 'No esta autorizado'
 
     def form_valid(self, form):
@@ -106,7 +107,7 @@ class ExpActualizacionPrueba(PermissionRequiredMixin, UpdateView):
     #     return form
 
 
-class ExpAgregarPrueba(CreateView):
+class ExpAgregarPrueba(LoginRequiredMixin, CreateView):
     template_name = "agregar_exp.html"
     form_class = ExpedientesPruebaForm
     success_url = '/Exp/prueba'
@@ -140,13 +141,13 @@ class ExpAgregarPrueba(CreateView):
         return super().form_valid(form)
 
 
-class ExpEliminar(DeleteView):
+class ExpEliminar(LoginRequiredMixin, DeleteView):
     model = ExpedientesPrueba
     template_name = "eliminar_exp.html"
     success_url = '/Exp/prueba/'
 
 
-class Pase(CreateView):
+class Pase(LoginRequiredMixin, CreateView):
     model = Pases
     form_class = PaseForm
     template_name = 'pases.html'
@@ -156,11 +157,6 @@ class Pase(CreateView):
         print(form.errors)
         return super().form_invalid(form)
 
-    # def form_valid(self, form):
-    #     response = super().form_valid(form)
-    #     pase = get_object_or_404(Pases, pk=self.object.pk)
-    #     print(pase.fecha_pase)
-    #     return response
 
     def get_initial(self):
         expediente_prueba = ExpedientesPrueba.objects.get(pk=self.kwargs['pk'])
@@ -173,7 +169,7 @@ class Pase(CreateView):
         return initial
 
 
-class CrearArea(CreateView):
+class CrearArea(LoginRequiredMixin, CreateView):
     model = Areas
     template_name = 'crear_area.html'
     success_url = '/Exp/crear_area/'
@@ -191,11 +187,10 @@ class CrearArea(CreateView):
         return form
 
 
-class CrearIniciador(CreateView):
+class CrearIniciador(LoginRequiredMixin, CreateView):
     form_class = IniciadorForm
     template_name = 'crear_iniciador.html'
     success_url = '/Exp/crear_iniciador/'
-
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -203,9 +198,7 @@ class CrearIniciador(CreateView):
         return context
 
 
-
-
-class DetalleExpediente(DetailView):
+class DetalleExpediente(LoginRequiredMixin, DetailView):
     model = ExpedientesPrueba
     template_name = 'detalle_exp.html'
     context_object_name = 'expediente'
@@ -243,7 +236,7 @@ class DetalleExpediente(DetailView):
         return context
 
 
-class PaseExpediente(DetailView):
+class PaseExpediente(LoginRequiredMixin, DetailView):
     model = ExpedientesPrueba
     template_name = "lista_pases.html"
 
@@ -254,7 +247,7 @@ class PaseExpediente(DetailView):
 
         return context
 
-
+@login_required
 def list_iniciadores(request):
     search = request.GET.get('q')  # Select2 envía el texto de búsqueda como un parámetro 'q'
     if search:
@@ -266,3 +259,14 @@ def list_iniciadores(request):
     iniciadores_list = list(iniciadores.values('sigla', 'iniciador'))
     data = {'iniciadores': iniciadores_list}
     return JsonResponse(data)
+
+
+@login_required
+def permisos_usuarios(request):
+    # Obtén los permisos del usuario
+    user_permissions = [permission.codename for permission in request.user.user_permissions.all()]
+    group_permissions = list(request.user.get_group_permissions())
+    all_permissions = user_permissions + group_permissions
+
+    # Devuelve los permisos del usuario
+    return JsonResponse({'permissions': all_permissions})

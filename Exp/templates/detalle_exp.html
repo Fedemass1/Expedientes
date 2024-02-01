@@ -49,26 +49,37 @@
                 <h2 class="mb-0">Detalles del Expediente</h2>
 
             </div>
+
             <div class="card-body">
                 <dl class="row ">
                     <div class="col-sm-12 ">
-                        <div class="d-flex justify-content-end mt-3">
-                            {% if ultimo_pase %}
-                                <a href="{% url 'pase_expediente' pk=expediente.pk %}"
-                                   class="btn btn-primary custom-tooltip" data-bs-toggle="tooltip" data-placement="top"
-                                   data-bs-html="true"
-                                   title="Fecha último pase: {{ ultimo_pase.fecha_pase|date:"d/m/Y" }}<br> De: {{ ultimo_pase.area_origen }}<br> A: {{ ultimo_pase.area_receptora }}">
-                                    Pases del Expediente <span class="badge text-bg-secondary">{{ numero_pases }}</span>
-                                </a>
-                            {% else %}
-                                <a href="{% url 'pase_expediente' pk=expediente.pk %}"
-                                   class="btn btn-primary custom-tooltip" data-bs-toggle="tooltip" data-placement="top"
-                                   data-bs-html="true" title="Este expediente no tiene pases">
-                                    Pases del Expediente <span class="badge text-bg-secondary">{{ 0 }}</span>
-                                </a>
+                        <div class="d-flex justify-content-end mt-3" style="height: 37px;">
+                            {% if perms.Exp.view_pases %}
+                                {% if ultimo_pase %}
+
+                                    <a href="{% url 'pase_expediente' pk=expediente.pk %}"
+                                       class="btn btn-primary custom-tooltip" data-bs-toggle="tooltip"
+                                       data-placement="top"
+                                       data-bs-html="true"
+                                       title="Fecha último pase: {{ ultimo_pase.fecha_pase|date:"d/m/Y" }}<br> De: {{ ultimo_pase.area_origen }}<br> A: {{ ultimo_pase.area_receptora }}">
+                                        Pases del Expediente <span
+                                            class="badge text-bg-secondary">{{ numero_pases }}</span>
+                                    </a>
+                                {% else %}
+                                    <a href="{% url 'pase_expediente' pk=expediente.pk %}"
+                                       class="btn btn-primary custom-tooltip" data-bs-toggle="tooltip"
+                                       data-placement="top"
+                                       data-bs-html="true" title="Este expediente no tiene pases">
+                                        Pases del Expediente <span class="badge text-bg-secondary">{{ 0 }}</span>
+                                    </a>
+                                {% endif %}
+
                             {% endif %}
+
                         </div>
+
                     </div>
+
                     <dt class="col-sm-3 mb-2 font-weight-bold numero-expediente">Número de Expediente:</dt>
                     <dd class="col-sm-9 mb-2 font-weight-bold numero-expediente">{{ expediente.nro_exp|stringformat:"03d" }}-{{ expediente.iniciador.sigla }}-{{ expediente.fecha|date:"Y" }}</dd>
 

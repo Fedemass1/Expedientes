@@ -6,6 +6,23 @@
     <title>Title</title>
     <link rel="stylesheet" href="{% static 'css/index6.css' %}">
 
+    <style>
+        .btn-custom-logout {
+            font-size: 1.2rem; /* Ajusta el tamaño según tus preferencias */
+        }
+
+         .user-info {
+            margin-top: 0.2rem;
+            margin-bottom: auto;
+        }
+
+         .navbar {
+            padding: 5px; /* Ajusta el padding según tus preferencias */
+            line-height: 1.5; /* Ajusta el line-height según tus preferencias */
+
+        }
+    </style>
+
 </head>
 <body>
 <div class="main-content">
@@ -51,10 +68,16 @@
             </span>
                         </h5>
                     {% endif %}
+
                 </div>
 
             </div>
-
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-link text-white btn-custom-logout">
+                    <i class="bi bi-box-arrow-right"></i>
+                </button>
+            </form>
         </div>
     </nav>
 </div>

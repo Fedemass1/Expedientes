@@ -18,4 +18,5 @@ urlpatterns = [
     path('detalle_expediente/<int:pk>/', DetalleExpediente.as_view(), name='detalle_expediente'),
     path('pase_expediente/<int:pk>/', PaseExpediente.as_view(), name='pase_expediente'),
     path('list_iniciadores/', views.list_iniciadores, name='list_iniciadores'),
+    path('permisos_usuarios/', views.permisos_usuarios, name='permisos_usuarios')
 ]

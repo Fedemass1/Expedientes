@@ -32,7 +32,7 @@ class PaseForm(forms.ModelForm):
         super(PaseForm, self).__init__(*args, **kwargs)
         nro_exp = self.initial.get('nro_exp')
         exp_year = self.initial.get('exp_year')
-        print("nro_exp_", exp_year)
+        print("nro_exp", exp_year)
 
         ultimo_pase = Pases.objects.filter(nro_exp=nro_exp).order_by('-fecha_pase').first()
         # Set the current date and time for 'fecha_pase'
@@ -40,6 +40,7 @@ class PaseForm(forms.ModelForm):
 
         if ultimo_pase is not None:
             self.fields['area_origen'].initial = ultimo_pase.area_receptora
+
 
         else:
             # Manejar el caso en que no existen pases para el expediente
@@ -49,6 +50,7 @@ class PaseForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
+        print(cleaned_data)
         area_origen = cleaned_data.get('area_origen')
         area_receptora = cleaned_data.get('area_receptora')
 
@@ -57,7 +59,9 @@ class PaseForm(forms.ModelForm):
         if not area_receptora:
             self.add_error('area_receptora', "El área receptora no puede estar vacía")
 
+        print(cleaned_data)
         return cleaned_data
+
 
     class Meta:
         model = Pases

@@ -53,7 +53,7 @@ def list_expedientes_prueba(request):
         expedientes_data.append(expediente_data)
 
 
-
+    print("Esto es una prueba")
     return JsonResponse({'expedientes_prueba': expedientes_data}, safe=False)
 
 
